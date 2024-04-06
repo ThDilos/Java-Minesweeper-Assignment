@@ -14,6 +14,8 @@ public class GameBoardPanel extends JPanel {
    public static final int CANVAS_WIDTH  = CELL_SIZE * COLS; // Game board width/height
    public static final int CANVAS_HEIGHT = CELL_SIZE * ROWS;
 
+   public boolean hasLost = false;
+
    // Define properties (package-visible)
    /** The game board composes of ROWSxCOLS cells */
    Cell cells[][] = new Cell[ROWS][COLS];
@@ -75,17 +77,17 @@ public class GameBoardPanel extends JPanel {
             }
          }
       }
-      
       return numMines;
    }
 
    // Reveal the cell at (srcRow, srcCol)
    // If this cell has 0 mines, reveal the 8 neighboring cells recursively
    private void revealCell(int srcRow, int srcCol) {
+      Cell sourceCell = cells[srcRow][srcCol];
       int numMines = getSurroundingMines(srcRow, srcCol);
-      cells[srcRow][srcCol].setText(((numMines == 0 ? "" : numMines)) + "");
-      cells[srcRow][srcCol].isRevealed = true;
-      cells[srcRow][srcCol].paint();  // based on isRevealed
+      sourceCell.setText(sourceCell.isMined ? "*" : ((numMines == 0 ? "" : numMines)) + "");
+      sourceCell.isRevealed = true;
+      sourceCell.paint();  // based on isRevealed
       if (numMines == 0) {
         // Recursively reveal the 8 neighboring cells
          for (int row = srcRow - 1; row <= srcRow + 1; row++) {
@@ -127,30 +129,32 @@ public class GameBoardPanel extends JPanel {
             // else reveal this cell
             sourceCell.removeMouseListener(this);
             if (sourceCell.isMined) {
-               JOptionPane.showMessageDialog(null, "Game Over");
+               hasLost = true;
+               
+               sourceCell.isRevealed = true;
                sourceCell.setText("*");
+
+               for (int row = 0; row < ROWS; row++) {
+                  for (int col = 0; col < COLS; col++) {
+                     // Initialize each cell with/without mine
+                     revealCell(row, col);
+                     cells[row][col].paint();
+                  }
+               }
+               JOptionPane.showMessageDialog(null, "Game Over");
             } 
             else {
                revealCell(sourceCell.row, sourceCell.col);
             }
          } 
          else if (e.getButton() == MouseEvent.BUTTON3) { // right-button clicked
-            // [TODO 6]
-            // If this cell is flagged, remove the flag
-            // else plant a flag.
-            // ......
-            if(sourceCell.isFlagged) 
-               sourceCell.isFlagged = false;
-            else
-               sourceCell.isFlagged = true;
-
+            sourceCell.isFlagged = !sourceCell.isFlagged;
             sourceCell.paint();
          }
 
          if(hasWon()) {
-            JOptionPane.showMessageDialog(null, "You Won!");
-            System.exit(0);
+            JOptionPane.showMessageDialog(null, "You've Won!");
          }
       }
-   }//[TODO 4]
+   }
 }
