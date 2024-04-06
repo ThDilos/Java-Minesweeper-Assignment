@@ -17,6 +17,8 @@ public class Cell extends JButton {
    public static final Color FG_REVEALED = Color.YELLOW; // number of mines
    public static final Font FONT_NUMBERS = new Font("Monospaced", Font.BOLD, 20);
 
+   public static final Color FG_FLAGGED = Color.YELLOW;
+
    // Define properties (package-visible)
    /** The row and column number of the cell */
    int row, col;
@@ -50,5 +52,8 @@ public class Cell extends JButton {
    public void paint() {
       super.setForeground(isRevealed? FG_REVEALED: FG_NOT_REVEALED);
       super.setBackground(isRevealed? BG_REVEALED: BG_NOT_REVEALED);
+      if (!isRevealed) {
+         super.setBackground(isFlagged? Color.yellow: BG_NOT_REVEALED);
+      } //Flag
    }
 }

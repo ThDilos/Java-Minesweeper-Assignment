@@ -3,4 +3,26 @@ Contributors: Chen Ou (ThDilos), ()
 
 Due Date: Week 13
 
-[Official Assignment Guideline](https://www3.ntu.edu.sg/home/ehchua/programming/java/JavaGame_Sudoku.html)
+[Official Assignment Guideline](https://www3.ntu.edu.sg/home/ehchua/programming/java/JavaGame_MineSweeper.html)
+
+* Update: 06 April 2024. Base game is complete. Now we focus on the "More Credits" Part:
+
+    If a cell with no surrounding mine is revealed, all the 8-neighbors shall be automatically revealed, in a "recursive" manner. Also, there is no need to display the number "0".
+    Reset/Restart the game. [DONE]
+    Beautify your graphical interface, e.g., theme (color, font), layout, etc.
+    Choice of difficulty levels (e.g,, easy, intermediate, difficult with different board sizes).
+    Create a menu bar for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes).
+    Create a status bar (JTextField at the south zone of BorderLayout) to show the messages (e.g., the number of mines remaining). (Google "java swing statusbar").
+    Timer (pause/resume), score, progress bar.
+    A side panel for command, display, strategy?
+    Choice of game board - there are many variations of game board!
+    Sound effect, background music, enable/disable sound?
+    High score and player name?
+    Hints and cheats?
+    Theme?
+    Use of images and icons?
+    Welcome screen?
+    Mouse-less interface?
+    Handling of first move: Most minesweepers ensure that your first move will not hit a mine? Some even ensure that the first move will always has 0 surrounding mines.
+    (Very difficult) Multi-Player network game.
+    ......

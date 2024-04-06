@@ -36,7 +36,11 @@ public class MineSweeperMain extends JFrame {
 
    // The entry main() method
    public static void main(String[] args) {
-      // [TODO 1] Check Swing program template on how to run the constructor
-      // .........
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new MineSweeperMain();
+         }
+      });
    }
 }

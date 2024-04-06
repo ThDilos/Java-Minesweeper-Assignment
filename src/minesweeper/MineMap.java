@@ -14,7 +14,7 @@ public class MineMap {
 
    // Constructor
    public MineMap() {
-      super();
+      super(); /*Construct itself for GameBoardPanel to use*/
    }
 
    // Allow user to change the rows and cols
