@@ -83,9 +83,13 @@ public class MineSweeperMain extends JFrame {
          
          label.setText(this.toString()); // Set the timer label per second
 
-         if(board.hasLost) {
-            label.setText("You've Lost!"); //Replace the timer with "You've Lost!"
-            timer.stop(); //Stop the internal timer
+         if(board.hasLost()) {
+            label.setText("You've Lost!"); // Replace the timer with "You've Lost!"
+            timer.stop(); // Stop the internal timer
+         }
+         if(board.hasWon()) {
+            label.setText("Time Spent: " + this.toString());
+            timer.stop(); // Stop the internal timer
          }
       }
 
@@ -98,7 +102,6 @@ public class MineSweeperMain extends JFrame {
          this.second = 0;
          this.minute = 0;
          this.hour = 0; //Reset the 3 parameters
-         board.hasLost = false;
          timer.restart(); //Restart the 1s internal timer, negligible
          label.setText("0s"); //Reset Label to 0s
       }
