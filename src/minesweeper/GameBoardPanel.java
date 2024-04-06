@@ -14,7 +14,7 @@ public class GameBoardPanel extends JPanel {
    public static final int CANVAS_WIDTH  = CELL_SIZE * COLS; // Game board width/height
    public static final int CANVAS_HEIGHT = CELL_SIZE * ROWS;
 
-   public boolean hasLost = false;
+   private CellMouseListener listener = new CellMouseListener(); // TODO 3: a generic listener for all
 
    // Define properties (package-visible)
    /** The game board composes of ROWSxCOLS cells */
@@ -26,24 +26,13 @@ public class GameBoardPanel extends JPanel {
    public GameBoardPanel() {
       super.setLayout(new GridLayout(ROWS, COLS, 2, 2));  // JPanel
 
-      // Allocate the 2D array of Cell, and added into content-pane.
+      // Allocate the 2D array of Cell, and added into content-pane and this common listener
       for (int row = 0; row < ROWS; ++row) {
          for (int col = 0; col < COLS; ++col) {
             cells[row][col] = new Cell(row, col);
             super.add(cells[row][col]);
          }
       }
-
-      // [TODO 3] Allocate a common listener as the MouseEvent listener for all the
-      //  Cells (JButtons)
-      CellMouseListener listener = new CellMouseListener();
-
-      // [TODO 4] Every cell adds this common listener
-         for (int row = 0; row < ROWS; ++row) {
-            for (int col = 0; col < COLS; ++col) {
-               cells[row][col].addMouseListener(listener);   // For all rows and cols
-            }
-         }//TODO 4 DONE by Chen Ou
 
       // Set the size of the content-pane and pack all the components
       //  under this container.
@@ -61,6 +50,10 @@ public class GameBoardPanel extends JPanel {
          for (int col = 0; col < COLS; col++) {
             // Initialize each cell with/without mine
             cells[row][col].newGame(mineMap.isMined[row][col]);
+            //Every cell adds back this common listener
+            cells[row][col].addMouseListener(listener);
+            //Changed to unRevealed
+            cells[row][col].isRevealed = false;
          }
       }
    }
@@ -88,6 +81,7 @@ public class GameBoardPanel extends JPanel {
       sourceCell.setText(sourceCell.isMined ? "*" : ((numMines == 0 ? "" : numMines)) + "");
       sourceCell.isRevealed = true;
       sourceCell.paint();  // based on isRevealed
+      sourceCell.removeMouseListener(listener);
       if (numMines == 0) {
         // Recursively reveal the 8 neighboring cells
          for (int row = srcRow - 1; row <= srcRow + 1; row++) {
@@ -114,6 +108,18 @@ public class GameBoardPanel extends JPanel {
       return true;
    }
 
+   // Return true if the player has lost (a mine has been revealed)
+   public boolean hasLost() {
+      for (int row = 0; row < ROWS; row++) {
+         for (int col = 0; col < COLS; col++) {
+            // Initialize each cell with/without mine
+            if(cells[row][col].isRevealed && cells[row][col].isMined)
+               return true;
+         }
+      }
+      return false;
+   }
+
    // [TODO 2] Define a Listener Inner Class
    private class CellMouseListener extends MouseAdapter {
       @Override
@@ -127,22 +133,18 @@ public class GameBoardPanel extends JPanel {
             // [TODO 5] (later, after TODO 3 and 4
             // if you hit a mine, game over
             // else reveal this cell
-            sourceCell.removeMouseListener(this);
-            if (sourceCell.isMined) {
-               hasLost = true;
-               
-               sourceCell.isRevealed = true;
-               sourceCell.setText("*");
-
-               for (int row = 0; row < ROWS; row++) {
-                  for (int col = 0; col < COLS; col++) {
-                     // Initialize each cell with/without mine
-                     revealCell(row, col);
-                     cells[row][col].paint();
+            if (sourceCell.isMined) 
+               {
+                  for (int row = 0; row < ROWS; row++) {
+                     for (int col = 0; col < COLS; col++) {
+                        // Initialize each cell with/without mine
+                        sourceCell.removeMouseListener(listener);
+                        revealCell(row, col);
+                        cells[row][col].paint();
+                     }
                   }
+                  JOptionPane.showMessageDialog(null, "Game Over");
                }
-               JOptionPane.showMessageDialog(null, "Game Over");
-            } 
             else {
                revealCell(sourceCell.row, sourceCell.col);
             }
