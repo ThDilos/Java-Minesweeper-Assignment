@@ -8,7 +8,7 @@ Due Date: Week 13
 * Update: 06 April 2024. Base game is complete. Now we focus on the "More Credits" Part:
 
     1. If a cell with no surrounding mine is revealed, all the 8-neighbors shall be automatically revealed, in a "recursive" manner. Also, there is no need to display the number "0". [DONE]
-    2. Reset/Restart the game. 
+    2. Reset/Restart the game. [DONE]
     3. Beautify your graphical interface, e.g., theme (color, font), layout, etc.
     4. Choice of difficulty levels (e.g,, easy, intermediate, difficult with different board sizes).
     5. Create a menu bar for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes).
@@ -26,3 +26,7 @@ Due Date: Week 13
     17. Handling of first move: Most minesweepers ensure that your first move will not hit a mine? Some even ensure that the first move will always has 0 surrounding mines.
     18. (Very difficult) Multi-Player network game.
     ......
+
+* Update: 07 April 2024. The next few updates should be in branch V1.0.1
+Finished the second credit: implemented a reset button
+Added an extra timer to showcase your timespent. This can be further extended in the future (Leader boards etc.)
