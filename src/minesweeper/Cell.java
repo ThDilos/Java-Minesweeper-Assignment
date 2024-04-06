@@ -55,5 +55,7 @@ public class Cell extends JButton {
       if (!isRevealed) {
          super.setBackground(isFlagged? Color.yellow: BG_NOT_REVEALED);
       } //Flag
+      if(isMined && isRevealed)
+         super.setBackground(Color.RED);
    }
 }
