@@ -26,3 +26,5 @@ Due Date: Week 13
     17. Handling of first move: Most minesweepers ensure that your first move will not hit a mine? Some even ensure that the first move will always has 0 surrounding mines.
     18. (Very difficult) Multi-Player network game.
     ......
+
+The Following Updates should be carried out in the V1.0.1 Branch 
