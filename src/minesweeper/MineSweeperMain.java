@@ -18,21 +18,45 @@ public class MineSweeperMain extends JFrame {
    CustomTimerAction ActualTimer; // The actual timer recording the parameters 
    Timer timer; // The internal timer
    StatusSection statusSection = new StatusSection(); // The top panel
+   StartMenu Start = new StartMenu(); // The Start Menu
+
+   Container cp; // Moved the container to a bigger level for more access
 
    // Constructor to set up all the UI and game components
    public MineSweeperMain() {
-      Container cp = this.getContentPane();           // JFrame's content-pane
+      cp = this.getContentPane();           // JFrame's content-pane
       cp.setLayout(new BorderLayout()); // in 10x10 GridLayout
-
-      cp.add(statusSection, BorderLayout.NORTH);
-      cp.add(board, BorderLayout.CENTER);
-
-      board.newGame();
-
-      pack();  // Pack the UI components, instead of setSize()
+      cp.add(Start, BorderLayout.CENTER); // Open Start Menu on initialisation
+      pack(); // Set size to the buttons in Start menu
+     // Pack the UI components, instead of setSize()
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // handle window-close button
       setTitle("Minesweeper");
       setVisible(true);   // show it
+   }
+
+   public class StartMenu extends JPanel { // This is the start menu you see on initialisation
+      private JButton Start;
+
+      public StartMenu() {
+         super.setLayout(new BorderLayout());
+         Start = new JButton("Start");
+         super.add(Start);
+
+         Start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+               cp.removeAll(); // Clear Current Panel
+
+               board.newGame();
+               timer.start();
+
+               cp.add(statusSection, BorderLayout.NORTH);
+               cp.add(board, BorderLayout.CENTER);
+               pack(); // Adjust size to the standard one
+            }
+         });
+      }
+
    }
 
    public class StatusSection extends JPanel { // This is the top section panel added into the minesweeper
@@ -81,7 +105,7 @@ public class MineSweeperMain extends JFrame {
             hour++;
          }
          
-         label.setText(this.toString()); // Set the timer label per second
+         label.setText(this.toSecond()); // Set the timer label per second
 
          if(board.hasLost()) {
             label.setText("You've Lost!"); // Replace the timer with "You've Lost!"
@@ -103,7 +127,7 @@ public class MineSweeperMain extends JFrame {
          this.minute = 0;
          this.hour = 0; //Reset the 3 parameters
          timer.restart(); //Restart the 1s internal timer, negligible
-         label.setText("0s"); //Reset Label to 0s
+         label.setText("000"); //Reset Label to 0s
       }
 
       public String toString() { //Return in desired Time Format
@@ -113,6 +137,10 @@ public class MineSweeperMain extends JFrame {
             return minute + " min " + (second < 10 ? "0"+ second : second) + " s";
          else
             return second + " s";
+      }
+      
+      public String toSecond() {
+         return String.format("%3s", Integer.toString(second + minute * 60 + hour * 60)).replace(" ", "0");
       }
    }
 
