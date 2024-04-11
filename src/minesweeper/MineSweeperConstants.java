@@ -14,13 +14,13 @@ public class MineSweeperConstants {
    public static final int EASY_CELL_SIZE = 60;
    public static final int EASY_MINE_NUM = 10;
 
-   public static final int NORMAL_ROWS = 15;
+   public static final int NORMAL_ROWS = 18;
    public static final int NORMAL_COLS = 18;
-   public static final int NORMAL_CELL_SIZE = 50;
-   public static final int NORMAL_MINE_NUM = 20;
-
+   public static final int NORMAL_CELL_SIZE = 55;
+   public static final int NORMAL_MINE_NUM = 75;
+ 
    public static final int HARD_ROWS = 28;
-   public static final int HARD_COLS = 25;
-   public static final int HARD_CELL_SIZE = 40;
-   public static final int HARD_MINE_NUM = 30;
+   public static final int HARD_COLS = 28;
+   public static final int HARD_CELL_SIZE = 50;
+   public static final int HARD_MINE_NUM = 150;
 }
