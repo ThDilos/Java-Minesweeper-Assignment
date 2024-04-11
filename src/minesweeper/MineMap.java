@@ -17,7 +17,7 @@ public class MineMap {
    }
 
    // Allow user to change the rows and cols
-   public void newMineMap(int numMines, int rowinput, int colinput) {
+   public void newMineMap(int numMines, int rowinput, int colinput, int firstRow, int firstCol) {
 
       isMined = new boolean[rowinput][colinput];
       this.numMines = numMines;
@@ -39,7 +39,7 @@ public class MineMap {
       for (int i = 0; i < numMines; i++) {
          int rows = getARandomInt(0, rowinput);
          int cols = getARandomInt(0, colinput);
-         if (!isMined[rows][cols])
+         if (!isMined[rows][cols] && !((rows >= firstRow - 1 && rows <= firstRow + 1) && (cols >= firstCol - 1 && cols <= firstCol + 1)))
             isMined[rows][cols] = true;
          else
             i--;
