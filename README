@@ -9,12 +9,12 @@ Due Date: Week 13
 
     1. If a cell with no surrounding mine is revealed, all the 8-neighbors shall be automatically revealed, in a "recursive" manner. Also, there is no need to display the number "0". [DONE]
     2. Reset/Restart the game. [DONE]
-    3. Beautify your graphical interface, e.g., theme (color, font), layout, etc.
-    4. Choice of difficulty levels (e.g,, easy, intermediate, difficult with different board sizes).
-    5. Create a menu bar for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes).
-    6. Create a status bar (JTextField at the south zone of BorderLayout) to show the messages (e.g., the number of mines remaining). (Google "java swing statusbar").
-    7. Timer (pause/resume), score, progress bar.
-    8. A side panel for command, display, strategy?
+    3. Beautify your graphical interface, e.g., theme (color, font), layout, etc. [To be done at last?]
+    4. Choice of difficulty levels (e.g,, easy, intermediate, difficult with different board sizes). [DONE]
+    5. Create a menu bar for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes). [I don't suggest this, this makes the game look old obsolete and ugly :(]
+    6. Create a status bar (JTextField at the south zone of BorderLayout) to show the messages (e.g., the number of mines remaining). (Google "java swing statusbar"). [Isn't this cheating?]
+    7. Timer (pause/resume), score, progress bar. [Now have a timer :D]
+    8. A side panel for command, display, strategy? 
     9. Choice of game board - there are many variations of game board!
     10. Sound effect, background music, enable/disable sound?
     11. High score and player name?
