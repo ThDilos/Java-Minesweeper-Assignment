@@ -1,53 +1,88 @@
 package minesweeper;
 import java.awt.*;
-import java.awt.desktop.SystemEventListener;
 import java.awt.event.*;
 import javax.swing.*;
-import static minesweeper.MineSweeperConstants.ROWS;
-import static minesweeper.MineSweeperConstants.COLS;
 
 public class GameBoardPanel extends JPanel {
-   private static final long serialVersionUID = 1L;  // to prevent serial warning
+   private int cell_size, glob_row, glob_col, canvas_height, canvas_width, numMines;
 
-   // Define named constants for UI sizes
-   public static final int CELL_SIZE = 60;  // Cell width and height, in pixels
-   public static final int CANVAS_WIDTH  = CELL_SIZE * COLS; // Game board width/height
-   public static final int CANVAS_HEIGHT = CELL_SIZE * ROWS;
+   private static final long serialVersionUID = 1L;  // to prevent serial warning
 
    private CellMouseListener listener = new CellMouseListener(); // TODO 3: a generic listener for all
 
+   private MineSweeperMain controlMain;
+
+
    // Define properties (package-visible)
-   /** The game board composes of ROWSxCOLS cells */
-   Cell cells[][] = new Cell[ROWS][COLS];
+   /** The game board composes of glob_rowxglob_col cells */
+   Cell cells[][];
    /** Number of mines */
-   int numMines = 10;
-
    /** Constructor */
-   public GameBoardPanel() {
-      super.setLayout(new GridLayout(ROWS, COLS, 2, 2));  // JPanel
+   public GameBoardPanel(MineSweeperMain controlMain) {
+      this.controlMain = controlMain;
 
-      // Allocate the 2D array of Cell, and added into content-pane and this common listener
-      for (int row = 0; row < ROWS; ++row) {
-         for (int col = 0; col < COLS; ++col) {
-            cells[row][col] = new Cell(row, col);
-            super.add(cells[row][col]);
-         }
-      }
+      super.setLayout(new GridLayout(10, 10, 2, 2));  // JPanel
 
       // Set the size of the content-pane and pack all the components
       //  under this container.
-      super.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+      super.setPreferredSize(new Dimension(canvas_width, canvas_height));
    }
 
    // Initialize and re-initialize a new game
    public void newGame() {
+      switch (controlMain.getDifficulty()) {
+         case 0:
+            this.glob_row = minesweeper.MineSweeperConstants.EASY_ROWS;
+            this.glob_col = minesweeper.MineSweeperConstants.EASY_COLS;
+            this.numMines = minesweeper.MineSweeperConstants.EASY_MINE_NUM;
+            this.cell_size = minesweeper.MineSweeperConstants.EASY_CELL_SIZE;
+            break;
+         case 1:
+            this.glob_row = minesweeper.MineSweeperConstants.NORMAL_ROWS;
+            this.glob_col = minesweeper.MineSweeperConstants.NORMAL_COLS;
+            this.numMines = minesweeper.MineSweeperConstants.NORMAL_MINE_NUM;
+            this.cell_size = minesweeper.MineSweeperConstants.NORMAL_CELL_SIZE;
+            System.out.println("Initialised Normal Difficulty");
+            break;
+         case 2:
+            this.glob_row = minesweeper.MineSweeperConstants.HARD_ROWS;
+            this.glob_col = minesweeper.MineSweeperConstants.HARD_COLS;
+            this.numMines = minesweeper.MineSweeperConstants.HARD_MINE_NUM;
+            this.cell_size = minesweeper.MineSweeperConstants.HARD_CELL_SIZE;
+            break;
+         default:
+            this.glob_row = 10;
+            this.glob_col = 10;
+            this.numMines = 10;
+            this.cell_size = 40;
+      }
+
+      cells = new Cell[glob_row][glob_col];
+
+      canvas_height = cell_size * glob_row;
+      canvas_width = cell_size * glob_col;
+
+      // Allocate the 2D array of Cell, and added into content-pane and this common listener
+      for (int row = 0; row < glob_row; ++row) {
+         for (int col = 0; col < glob_col; ++col) {
+            cells[row][col] = new Cell(row, col);
+            super.add(cells[row][col]);
+         }
+      }
+      
+      super.setLayout(new GridLayout(glob_row, glob_col, 2, 2));  // JPanel
+
+      // Set the size of the content-pane and pack all the components
+      //  under this container.
+      super.setPreferredSize(new Dimension(canvas_width, canvas_height));
+
       // Get a new mine map
       MineMap mineMap = new MineMap();
-      mineMap.newMineMap(numMines);
+      mineMap.newMineMap(numMines, glob_row, glob_col);
 
       // Reset cells, mines, and flags
-      for (int row = 0; row < ROWS; row++) {
-         for (int col = 0; col < COLS; col++) {
+      for (int row = 0; row < glob_row; row++) {
+         for (int col = 0; col < glob_col; col++) {
             // Initialize each cell with/without mine
             cells[row][col].newGame(mineMap.isMined[row][col]);
             //Every cell adds back this common listener
@@ -65,7 +100,7 @@ public class GameBoardPanel extends JPanel {
       for (int row = srcRow - 1; row <= srcRow + 1; row++) {
          for (int col = srcCol - 1; col <= srcCol + 1; col++) {
             // Need to ensure valid row and column numbers too
-            if (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
+            if (row >= 0 && row < glob_row && col >= 0 && col < glob_col) {
                if (cells[row][col].isMined) numMines++;
             }
          }
@@ -87,7 +122,7 @@ public class GameBoardPanel extends JPanel {
          for (int row = srcRow - 1; row <= srcRow + 1; row++) {
             for (int col = srcCol - 1; col <= srcCol + 1; col++) {
                // Need to ensure valid row and column numbers too
-               if (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
+               if (row >= 0 && row < glob_row && col >= 0 && col < glob_col) {
                   if (!cells[row][col].isRevealed) revealCell(row, col);
                }
             }
@@ -98,8 +133,8 @@ public class GameBoardPanel extends JPanel {
    // [TODO 7]
    // Return true if the player has won (all cells have been revealed or were mined)
    public boolean hasWon() {
-      for (int row = 0; row < ROWS; row++) {
-         for (int col = 0; col < COLS; col++) {
+      for (int row = 0; row < glob_row; row++) {
+         for (int col = 0; col < glob_col; col++) {
             // Initialize each cell with/without mine
             if(!cells[row][col].isRevealed == !cells[row][col].isMined)
                return false;
@@ -110,8 +145,8 @@ public class GameBoardPanel extends JPanel {
 
    // Return true if the player has lost (a mine has been revealed)
    public boolean hasLost() {
-      for (int row = 0; row < ROWS; row++) {
-         for (int col = 0; col < COLS; col++) {
+      for (int row = 0; row < glob_row; row++) {
+         for (int col = 0; col < glob_col; col++) {
             // Initialize each cell with/without mine
             if(cells[row][col].isRevealed && cells[row][col].isMined)
                return true;
@@ -135,14 +170,17 @@ public class GameBoardPanel extends JPanel {
             // else reveal this cell
             if (sourceCell.isMined) 
                {
-                  for (int row = 0; row < ROWS; row++) {
-                     for (int col = 0; col < COLS; col++) {
+                  for (int row = 0; row < glob_row; row++) {
+                     for (int col = 0; col < glob_col; col++) {
                         // Initialize each cell with/without mine
                         sourceCell.removeMouseListener(listener);
                         revealCell(row, col);
                         cells[row][col].paint();
                      }
                   }
+                  controlMain.getTimer().stop();
+                  controlMain.getStatusSection().getActualTimer().replaceLabel();
+                  System.out.println("User has taken an L");
                   JOptionPane.showMessageDialog(null, "Game Over");
                }
             else {
@@ -155,6 +193,9 @@ public class GameBoardPanel extends JPanel {
          }
 
          if(hasWon()) {
+            controlMain.getTimer().stop();
+            controlMain.getStatusSection().getActualTimer().replaceLabel();
+            System.out.println("User has obtained another victory");
             JOptionPane.showMessageDialog(null, "You've Won!");
          }
       }

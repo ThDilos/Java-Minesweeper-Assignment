@@ -2,6 +2,7 @@ package minesweeper;
 
 import java.awt.*;        // Use AWT's Layout Manager
 import java.awt.event.*;
+
 import javax.swing.*;     // Use Swing's Containers and Components
 /**
  * The Mine Sweeper Game.
@@ -14,142 +15,94 @@ public class MineSweeperMain extends JFrame {
    private static final long serialVersionUID = 1L;  // to prevent serial warning
 
    // private variables
-   GameBoardPanel board = new GameBoardPanel();
-   CustomTimerAction ActualTimer; // The actual timer recording the parameters 
-   Timer timer; // The internal timer
-   StatusSection statusSection = new StatusSection(); // The top panel
-   StartMenu Start = new StartMenu(); // The Start Menu
+   private GameBoardPanel board = new GameBoardPanel(this);
 
-   Container cp; // Moved the container to a bigger level for more access
+   private StatusSection statusSection = new StatusSection(this); // The top panel
+   private StartMenu startMenu = new StartMenu(this); // The Start Menu
+   private SettingPage settingPage = new SettingPage(this);
+
+   private Container cp; // Moved the container to a bigger level for more access
+
+   private int difficulty; // This is changed by SettingPage
+   // Easy = 0, Normal = 1, Hard = 2
 
    // Constructor to set up all the UI and game components
    public MineSweeperMain() {
+      this.difficulty = 0;
       cp = this.getContentPane();           // JFrame's content-pane
       cp.setLayout(new BorderLayout()); // in 10x10 GridLayout
-      cp.add(Start, BorderLayout.CENTER); // Open Start Menu on initialisation
+      cp.add(startMenu, BorderLayout.CENTER); // Open Start Menu on initialisation
+
+      startMenu.getStartButton().addActionListener(new ActionListener() { // When you pressed "Start":
+         @Override
+         public void actionPerformed(ActionEvent evt) {
+             cp.removeAll();
+             board.newGame(); // Generate a new set of game on the Game Board
+             statusSection.getTimer().start(); // Start the timour :D
+
+             cp.add(statusSection, BorderLayout.NORTH); // Add the Status Section on top of the Container
+             cp.add(board, BorderLayout.CENTER); // Add the main game board to the center of the Container
+             pack(); // Adjust size to the standard one
+         }
+      });
+
+      startMenu.getSettingButton().addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent evt) {
+            cp.removeAll();
+            cp.repaint();
+            cp.add(settingPage, BorderLayout.CENTER);
+            settingPage.paintButton();
+            pack();
+
+            settingPage.getReturnButton().addActionListener(new ActionListener() {
+               @Override
+               public void actionPerformed(ActionEvent owoWhatsDis) {
+                  cp.removeAll();
+                  cp.repaint();
+                  cp.add(startMenu, BorderLayout.CENTER);
+                  pack();
+               }
+            });
+         }
+      });
+
       pack(); // Set size to the buttons in Start menu
      // Pack the UI components, instead of setSize()
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // handle window-close button
       setTitle("Minesweeper");
       setVisible(true);   // show it
+      setLocationRelativeTo(null); // Start the JFrame at the center of screen
    }
 
-   public class StartMenu extends JPanel { // This is the start menu you see on initialisation
-      private JButton Start;
-
-      public StartMenu() {
-         super.setLayout(new BorderLayout());
-         Start = new JButton("Start");
-         super.add(Start);
-
-         Start.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-               cp.removeAll(); // Clear Current Panel
-
-               board.newGame();
-               timer.start();
-
-               cp.add(statusSection, BorderLayout.NORTH);
-               cp.add(board, BorderLayout.CENTER);
-               pack(); // Adjust size to the standard one
-            }
-         });
-      }
-
+   /* Methods for enclosure purpose */
+   public GameBoardPanel getBoard() {
+      return this.board;
    }
 
-   public class StatusSection extends JPanel { // This is the top section panel added into the minesweeper
-      //Private variables
-      private JButton Restart; // Restart Button
-      private JLabel LabelTimer; // Timer Label
-      
-      public StatusSection() { //Constructor
-         super.setLayout(new GridLayout(1, 3, 250, 1)); //Set up the panel into gridlayout
-         Restart = new JButton("Restart"); //Initialise the Button with text "Restart"
-         super.add(Restart); //Add start to the top panel
-
-         // To achieve the restart function
-         Restart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-               board.newGame();
-               ActualTimer.Reset(); 
-               System.out.println("Game Restarted!"); // Output to log
-            }
-         });
-
-         LabelTimer = new JLabel("0s"); //Initialise the Label
-         ActualTimer  = new CustomTimerAction(LabelTimer); //Initialise the ActualTimer, used to record down second, minute, hour
-         timer = new Timer(1000, ActualTimer); // Initialise the timer, and add ActualTimer to the actionPerformed
-         timer.start(); //Start Timer
-         super.add(LabelTimer); // Add the label onto the top panel
-      }
+   public Timer getTimer() {
+      return this.statusSection.getTimer();
    }
 
-   public class CustomTimerAction implements ActionListener {
-      //Private variables
-      private int second, minute, hour;
-      private JLabel label;
+   public StatusSection getStatusSection() {
+      return this.statusSection;
+   }
 
-      @Override //This actionPerformed runs every second
-      public void actionPerformed(ActionEvent e) {
-         second++; //Classic Time manipulation
-         if(second == 60) {
-            second = 0;
-            minute++;
-         }
-         if(minute == 60) {
-            second = 0;
-            minute = 0;
-            hour++;
-         }
-         
-         label.setText(this.toSecond()); // Set the timer label per second
+   public void setDifficulty(int val) {
+      this.difficulty = val;
+      System.out.println("Difficulty has been set to \"" + val + "\"");
+   }
 
-         if(board.hasLost()) {
-            label.setText("You've Lost!"); // Replace the timer with "You've Lost!"
-            timer.stop(); // Stop the internal timer
-         }
-         if(board.hasWon()) {
-            label.setText("Time Spent: " + this.toString());
-            timer.stop(); // Stop the internal timer
-         }
-      }
-
-      public CustomTimerAction(JLabel UpdatingLabel) {
-         this.label = UpdatingLabel; // Point to the Timer label to modify
-      }
-
-      // This is used to reset the timer
-      public void Reset() {
-         this.second = 0;
-         this.minute = 0;
-         this.hour = 0; //Reset the 3 parameters
-         timer.restart(); //Restart the 1s internal timer, negligible
-         label.setText("000"); //Reset Label to 0s
-      }
-
-      public String toString() { //Return in desired Time Format
-         if(hour > 0) // Dumb method for output 00 format. There is definitely a String.format way to do but I'm too lazy to find out ;)
-            return hour + " h " + (minute < 10 ? "0"+ minute : minute) + " min " + (second < 10 ? "0"+ second : second) + " s";
-         else if(minute > 0) 
-            return minute + " min " + (second < 10 ? "0"+ second : second) + " s";
-         else
-            return second + " s";
-      }
-      
-      public String toSecond() {
-         return String.format("%3s", Integer.toString(second + minute * 60 + hour * 60)).replace(" ", "0");
-      }
+   public int getDifficulty() {
+      return this.difficulty;
    }
 
    // The entry main() method
    public static void main(String[] args) {
-      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+      javax.swing.SwingUtilities.invokeLater(new Runnable() { // Whatever this is, it is good to have for some particular reason that I completely forgot
          @Override
          public void run() {
-            new MineSweeperMain();
+            new MineSweeperMain(); // The core
          }
       });
    }
