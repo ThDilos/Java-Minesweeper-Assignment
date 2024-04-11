@@ -35,7 +35,7 @@ public class StartMenu extends JPanel { // This is the start menu you see on ini
         rankings.setFont(new Font("Arial", Font.PLAIN, (int)ButtonDimension.getHeight() - 2));
         super.add(rankings, gbc);
 
-        super.setPreferredSize(new Dimension(854, 480)); // This is the size of Minecraft :3
+        controlMain.setPreferredSize(new Dimension(854, 480)); // This is the size of Minecraft :3
     }
 
     public JButton getStartButton() { // You can't put removeAll() in a button that is about to be removed apparently :(
