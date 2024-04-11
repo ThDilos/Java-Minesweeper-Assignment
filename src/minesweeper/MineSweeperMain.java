@@ -36,13 +36,27 @@ public class MineSweeperMain extends JFrame {
       startMenu.getStartButton().addActionListener(new ActionListener() { // When you pressed "Start":
          @Override
          public void actionPerformed(ActionEvent evt) {
-             cp.removeAll();
-             board.newGame(); // Generate a new set of game on the Game Board
-             statusSection.getTimer().start(); // Start the timour :D
+            cp.removeAll();
+            board.newGame(); // Generate a new set of game on the Game Board
+            statusSection.getTimer().start(); // Start the timour :D
+            cp.repaint();
 
-             cp.add(statusSection, BorderLayout.NORTH); // Add the Status Section on top of the Container
-             cp.add(board, BorderLayout.CENTER); // Add the main game board to the center of the Container
-             pack(); // Adjust size to the standard one
+            cp.add(statusSection, BorderLayout.NORTH); // Add the Status Section on top of the Container
+            cp.add(board, BorderLayout.CENTER); // Add the main game board to the center of the Container
+            pack(); // Adjust size to the standard one
+            setLocationRelativeTo(null);
+
+            statusSection.getGoBackButton().addActionListener(new ActionListener() {
+               @Override
+               public void actionPerformed(ActionEvent evt) {
+                  cp.removeAll();
+                  cp.repaint();
+                  cp.add(startMenu, BorderLayout.CENTER);
+                  setPreferredSize(new Dimension(854, 480));
+                  pack();
+                  setLocationRelativeTo(null);
+               }
+            });
          }
       });
 
@@ -54,6 +68,7 @@ public class MineSweeperMain extends JFrame {
             cp.add(settingPage, BorderLayout.CENTER);
             settingPage.paintButton();
             pack();
+            setLocationRelativeTo(null);
 
             settingPage.getReturnButton().addActionListener(new ActionListener() {
                @Override
@@ -62,6 +77,7 @@ public class MineSweeperMain extends JFrame {
                   cp.repaint();
                   cp.add(startMenu, BorderLayout.CENTER);
                   pack();
+                  setLocationRelativeTo(null);
                }
             });
          }
