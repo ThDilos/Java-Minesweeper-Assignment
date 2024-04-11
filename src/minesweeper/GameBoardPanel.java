@@ -9,9 +9,12 @@ public class GameBoardPanel extends JPanel {
    private static final long serialVersionUID = 1L;  // to prevent serial warning
 
    private CellMouseListener listener = new CellMouseListener(); // TODO 3: a generic listener for all
+   private spawnProtection firstClick = new spawnProtection(); // Spawn Protection so you won't die immediately
 
    private MineSweeperMain controlMain;
 
+   // Get a new MineMap
+   private MineMap mineMap = new MineMap();
 
    // Define properties (package-visible)
    /** The game board composes of glob_rowxglob_col cells */
@@ -30,6 +33,7 @@ public class GameBoardPanel extends JPanel {
 
    // Initialize and re-initialize a new game
    public void newGame() {
+      removeAll();
       switch (controlMain.getDifficulty()) {
          case 0:
             this.glob_row = minesweeper.MineSweeperConstants.EASY_ROWS;
@@ -62,11 +66,15 @@ public class GameBoardPanel extends JPanel {
       canvas_height = cell_size * glob_row;
       canvas_width = cell_size * glob_col;
 
+      controlMain.setPreferredSize(new Dimension(canvas_width, canvas_height));
+      controlMain.repaint();
+
       // Allocate the 2D array of Cell, and added into content-pane and this common listener
       for (int row = 0; row < glob_row; ++row) {
          for (int col = 0; col < glob_col; ++col) {
             cells[row][col] = new Cell(row, col);
             super.add(cells[row][col]);
+            cells[row][col].paint();
          }
       }
       
@@ -76,20 +84,39 @@ public class GameBoardPanel extends JPanel {
       //  under this container.
       super.setPreferredSize(new Dimension(canvas_width, canvas_height));
 
-      // Get a new mine map
-      MineMap mineMap = new MineMap();
-      mineMap.newMineMap(numMines, glob_row, glob_col);
-
-      // Reset cells, mines, and flags
       for (int row = 0; row < glob_row; row++) {
          for (int col = 0; col < glob_col; col++) {
-            // Initialize each cell with/without mine
-            cells[row][col].newGame(mineMap.isMined[row][col]);
-            //Every cell adds back this common listener
-            cells[row][col].addMouseListener(listener);
-            //Changed to unRevealed
-            cells[row][col].isRevealed = false;
+            cells[row][col].addActionListener(firstClick);
          }
+      }
+   }
+
+   public class spawnProtection implements ActionListener {
+      private int firstRow, firstCol;
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         Cell sourcCell = (Cell) e.getSource();
+         this.firstRow = sourcCell.row;
+         this.firstCol = sourcCell.col;
+
+         mineMap.newMineMap(numMines, glob_row, glob_col, firstRow, firstCol);
+
+         // Reset cells, mines, and flags
+         for (int row = 0; row < glob_row; row++) {
+            for (int col = 0; col < glob_col; col++) {
+               // Revoke the spawn protection
+               cells[row][col].removeActionListener(firstClick);
+               // Initialize each cell with/without mine
+               cells[row][col].newGame(mineMap.isMined[row][col]);
+               //Every cell adds back this common listener
+               cells[row][col].addMouseListener(listener);
+               //Changed to unRevealed
+               cells[row][col].isRevealed = false;
+            }
+         }
+
+         revealCell(sourcCell.row, sourcCell.col);
       }
    }
 
@@ -111,12 +138,8 @@ public class GameBoardPanel extends JPanel {
    // Reveal the cell at (srcRow, srcCol)
    // If this cell has 0 mines, reveal the 8 neighboring cells recursively
    private void revealCell(int srcRow, int srcCol) {
-      Cell sourceCell = cells[srcRow][srcCol];
       int numMines = getSurroundingMines(srcRow, srcCol);
-      sourceCell.setText(sourceCell.isMined ? "*" : ((numMines == 0 ? "" : numMines)) + "");
-      sourceCell.isRevealed = true;
-      sourceCell.paint();  // based on isRevealed
-      sourceCell.removeMouseListener(listener);
+      revealSingleCell(cells[srcRow][srcCol], numMines);
       if (numMines == 0) {
         // Recursively reveal the 8 neighboring cells
          for (int row = srcRow - 1; row <= srcRow + 1; row++) {
@@ -160,6 +183,9 @@ public class GameBoardPanel extends JPanel {
       @Override
       public void mouseClicked(MouseEvent e) {         // Get the source object that fired the Event
          Cell sourceCell = (Cell)e.getSource();
+
+         if (sourceCell.isFlagged && e.getButton() == MouseEvent.BUTTON1) // Prevent clicking on flagged cell
+            return;
          // For debugging
          System.out.println("You clicked on (" + sourceCell.row + "," + sourceCell.col + ")");
 
@@ -172,10 +198,7 @@ public class GameBoardPanel extends JPanel {
                {
                   for (int row = 0; row < glob_row; row++) {
                      for (int col = 0; col < glob_col; col++) {
-                        // Initialize each cell with/without mine
-                        sourceCell.removeMouseListener(listener);
-                        revealCell(row, col);
-                        cells[row][col].paint();
+                        revealSingleCell(cells[row][col], 0);  
                      }
                   }
                   controlMain.getTimer().stop();
@@ -193,11 +216,55 @@ public class GameBoardPanel extends JPanel {
          }
 
          if(hasWon()) {
+            for (int row = 0; row < glob_row; row++) {
+               for (int col = 0; col < glob_col; col++) {
+                  cells[row][col].removeMouseListener(listener);
+               }
+            }
             controlMain.getTimer().stop();
             controlMain.getStatusSection().getActualTimer().replaceLabel();
             System.out.println("User has obtained another victory");
             JOptionPane.showMessageDialog(null, "You've Won!");
          }
       }
+   }
+
+   // The basic single cell reveal
+   public void revealSingleCell(Cell sourceCell, int numMines) {
+      numMines = getSurroundingMines(sourceCell.row, sourceCell.col);
+      sourceCell.setText(sourceCell.isMined ? "*" : ((numMines == 0 ? "" : numMines)) + "");
+      if (!sourceCell.isMined)
+         switch (numMines) {
+            case 1:
+               sourceCell.setForeground(Color.GREEN);
+               break;
+            case 2:
+               sourceCell.setForeground(Color.YELLOW);
+               break;
+            case 3:
+               sourceCell.setForeground(Color.ORANGE);
+               break;
+            case 4:
+               sourceCell.setForeground(Color.MAGENTA);
+               break;
+            case 5:
+               sourceCell.setForeground(Color.PINK);
+               break;
+            case 6:
+               sourceCell.setForeground(Color.RED);
+               break;
+            case 7:
+               sourceCell.setForeground(Color.LIGHT_GRAY);
+               break;
+            case 8:
+               sourceCell.setForeground(Color.BLACK);
+            default:
+               break;
+         }
+      else
+         sourceCell.setForeground(Color.YELLOW);
+      sourceCell.isRevealed = true;
+      sourceCell.paint();  // based on isRevealed
+      sourceCell.removeMouseListener(listener);
    }
 }
