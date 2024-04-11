@@ -11,9 +11,9 @@ Due Date: Week 13
     2. Reset/Restart the game. [DONE]
     3. Beautify your graphical interface, e.g., theme (color, font), layout, etc. [To be done at last?]
     4. Choice of difficulty levels (e.g,, easy, intermediate, difficult with different board sizes). [DONE]
-    5. Create a menu bar for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes). [I don't suggest this, this makes the game look old obsolete and ugly :(]
+    5. Create a menu bar for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes). [I don't suggest this, this makes the game look old and ugly :(]
     6. Create a status bar (JTextField at the south zone of BorderLayout) to show the messages (e.g., the number of mines remaining). (Google "java swing statusbar"). [Isn't this cheating?]
-    7. Timer (pause/resume), score, progress bar. [Now have a timer :D]
+    7. Timer (pause/resume), score, progress bar. [Timer DONE][Now have a timer :D]
     8. A side panel for command, display, strategy? 
     9. Choice of game board - there are many variations of game board!
     10. Sound effect, background music, enable/disable sound?
@@ -21,12 +21,24 @@ Due Date: Week 13
     12. Hints and cheats?
     13. Theme?
     14. Use of images and icons?
-    15. Welcome screen?
+    15. Welcome screen? [Start Menu?] [DONE?]
     16. Mouse-less interface?
-    17. Handling of first move: Most minesweepers ensure that your first move will not hit a mine? Some even ensure that the first move will always has 0 surrounding mines.
+    17. Handling of first move: Most minesweepers ensure that your first move will not hit a mine? Some even ensure that the first move will always has 0 surrounding mines. [Done]
     18. (Very difficult) Multi-Player network game.
     ......
 
 * Update: 07 April 2024. The next few updates should be in branch V1.0.1
 Finished the second credit: implemented a reset button
 Added an extra timer to showcase your timespent. This can be further extended in the future (Leader boards etc.)
+
+Extra Feature Realised:
+0. Auto reveal every cell once you lose
+1. Prevent Clicking if you flagged a mine
+2. A status bar with timer, restart and go back to menu button
+3. Start Page
+4. Setting Page
+5. Difficulty Settings with 3 difficulties
+6. Different colors for the different numbers
+7. Auto put the window on your screen center on initialisation, also resize it to the standard size whenever you are in the start page 
+8. Spawn Protection of 3*3 blocks ;)
+9.
