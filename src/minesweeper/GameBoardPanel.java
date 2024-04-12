@@ -68,6 +68,7 @@ public class GameBoardPanel extends JPanel {
 
       controlMain.setPreferredSize(new Dimension(canvas_width, canvas_height));
       controlMain.repaint();
+      repaint();
 
       // Allocate the 2D array of Cell, and added into content-pane and this common listener
       for (int row = 0; row < glob_row; ++row) {
@@ -139,7 +140,7 @@ public class GameBoardPanel extends JPanel {
    // If this cell has 0 mines, reveal the 8 neighboring cells recursively
    private void revealCell(int srcRow, int srcCol) {
       int numMines = getSurroundingMines(srcRow, srcCol);
-      revealSingleCell(cells[srcRow][srcCol], numMines);
+      revealSingleCell(cells[srcRow][srcCol]);
       if (numMines == 0) {
         // Recursively reveal the 8 neighboring cells
          for (int row = srcRow - 1; row <= srcRow + 1; row++) {
@@ -153,7 +154,6 @@ public class GameBoardPanel extends JPanel {
       }
    }
 
-   // [TODO 7]
    // Return true if the player has won (all cells have been revealed or were mined)
    public boolean hasWon() {
       for (int row = 0; row < glob_row; row++) {
@@ -178,7 +178,7 @@ public class GameBoardPanel extends JPanel {
       return false;
    }
 
-   // [TODO 2] Define a Listener Inner Class
+   // Define a Listener Inner Class
    private class CellMouseListener extends MouseAdapter {
       @Override
       public void mouseClicked(MouseEvent e) {         // Get the source object that fired the Event
@@ -191,19 +191,16 @@ public class GameBoardPanel extends JPanel {
 
          // Left-click to reveal a cell; Right-click to plant/remove the flag.
          if (e.getButton() == MouseEvent.BUTTON1) {  // Left-button clicked
-            // [TODO 5] (later, after TODO 3 and 4
+
             // if you hit a mine, game over
             // else reveal this cell
             if (sourceCell.isMined) 
                {
-                  for (int row = 0; row < glob_row; row++) {
-                     for (int col = 0; col < glob_col; col++) {
-                        revealSingleCell(cells[row][col], 0);  
-                     }
-                  }
+                  revealSingleCell(sourceCell);
                   controlMain.getTimer().stop();
                   controlMain.getStatusSection().getActualTimer().replaceLabel();
                   System.out.println("User has taken an L");
+                  FancyReveal();
                   JOptionPane.showMessageDialog(null, "Game Over");
                }
             else {
@@ -230,7 +227,7 @@ public class GameBoardPanel extends JPanel {
    }
 
    // The basic single cell reveal
-   public void revealSingleCell(Cell sourceCell, int numMines) {
+   public void revealSingleCell(Cell sourceCell) {
       numMines = getSurroundingMines(sourceCell.row, sourceCell.col);
       sourceCell.setText(sourceCell.isMined ? "*" : ((numMines == 0 ? "" : numMines)) + "");
       if (!sourceCell.isMined)
@@ -266,5 +263,147 @@ public class GameBoardPanel extends JPanel {
       sourceCell.isRevealed = true;
       sourceCell.paint();  // based on isRevealed
       sourceCell.removeMouseListener(listener);
+   }
+
+   // Custom Action Listener for Auto Revealing
+   public class RevealActionListener implements ActionListener {
+      private int row, col, style;
+      private int diffRow = 0, diffCol = 0;
+      private Timer sourceTimer;
+
+      public RevealActionListener(int style) {
+         this.style = style;
+         this.row = 0;
+         this.col = 0;
+      }
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         sourceTimer = (Timer) e.getSource(); // Get Source Timer
+
+         // Style switch
+         switch (style) {
+            case 0:
+               upDownSingleReveal();
+               break;
+            case 1:
+               leftRightMultiReveal();
+               break;
+            case 2:
+               centerReveal();
+               break;
+            case 3:
+               randomReveal();
+               break;
+            default:
+               break;
+         }
+      }
+
+      // Reveal from Up to down, Single cell
+      public void upDownSingleReveal() {
+         while(cells[row][col].isRevealed) {
+            if (col == glob_col - 1) {
+               col = 0;
+               row++;
+            }
+            else
+               col++;
+            if (row == glob_row - 1 && col == glob_col - 1)
+               break;
+         }
+         // Reveal the cell
+         revealSingleCell(cells[row][col]);
+
+         // Auto increment
+         if (col == glob_col - 1) {
+            this.col = 0;
+            row++;
+         }
+         else
+            col++;
+
+         //Stop condition
+         if (row == glob_row) {
+            sourceTimer.stop();
+         } 
+      }
+
+      // Reveal from left to right, column by column
+      public void leftRightMultiReveal() {
+         for (row = 0; row < glob_row; row++)
+            revealSingleCell(cells[row][col]);
+         if (col < glob_col - 1)
+            col++;
+         else
+            sourceTimer.stop();
+      }
+
+      // Reveal from center to outer
+      public void centerReveal() {
+         row = glob_row / 2;
+         col = glob_col / 2;
+         for (int stepRow = 0; stepRow <= diffRow ; stepRow++) {
+            for (int stepCol = 0; stepCol <= diffCol; stepCol++) {
+               revealSingleCell(cells[row-diffRow+stepRow-1][col-diffCol+stepCol-1]);
+               revealSingleCell(cells[row+diffRow-stepRow][col-diffCol+stepCol-1]);
+               revealSingleCell(cells[row+diffRow-stepRow][col+diffCol-stepCol]);
+               revealSingleCell(cells[row-diffRow+stepRow-1][col+diffCol-stepCol]);
+            }
+         }
+         diffRow++;
+         diffCol++;
+
+         if(diffRow == row || diffCol == col) {
+            sourceTimer.stop();
+            diffRow = 0;
+            diffCol = 0;
+         }
+      }
+
+      // Random reveal (Pattern unrecognisable) (Theoratically it's following the traditional revealCell() method starting from cells[0][0]. But everything is too quick that it appears random)
+      public void randomReveal() {
+         for (row = 0; row < glob_row; ++row){
+            for(col = 0; col < glob_col; ++col){
+               revealCell(row, col);
+            }
+         }
+         sourceTimer.stop();
+      }
+
+   }
+
+   // Cool Reveal Pattern Division
+   private Timer revealTimer; // The timer that control the delay of reveal
+   private Boolean timerSetUp = false;
+
+   public void stopDelayTimer() { // To end the delay when you clicked restart
+      if(timerSetUp)
+         revealTimer.stop();
+   }
+
+
+   public void FancyReveal() {
+      timerSetUp = true;
+      int difficultyDelay, style;
+      switch (controlMain.getDifficulty()) {
+         case 0:
+            difficultyDelay = 10;
+            break;
+         case 1:
+            difficultyDelay = 6;
+            break;
+         case 2:
+            difficultyDelay = 2;
+            break;
+         default:
+            difficultyDelay = 25;
+            break;
+      } 
+
+      style = Math.round((float)((3 + 0) * Math.random()));
+      RevealActionListener revealActionListener = new RevealActionListener(style);
+      revealTimer = new Timer(difficultyDelay, revealActionListener);
+      revealTimer.start();
    }
 }

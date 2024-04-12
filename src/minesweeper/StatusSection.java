@@ -59,6 +59,7 @@ public class StatusSection extends JPanel { // This is the top section panel add
     }
 
     public void resetTimer() {
+        controlCenter.getBoard().stopDelayTimer();
         timer.restart();
         this.ActualTimer.Reset();
     }
