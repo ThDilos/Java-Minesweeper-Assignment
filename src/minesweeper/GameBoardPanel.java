@@ -193,7 +193,7 @@ public class GameBoardPanel extends JPanel {
 
          // Left-click to reveal a cell; Right-click to plant/remove the flag.
          if (e.getButton() == MouseEvent.BUTTON1) {  // Left-button clicked
-
+            updateMineFlagged();
             // if you hit a mine, game over
             // else reveal this cell
             if (sourceCell.isMined) 
@@ -203,7 +203,9 @@ public class GameBoardPanel extends JPanel {
                   controlMain.getStatusSection().getActualTimer().replaceLabel();
                   System.out.println("User has taken an L");
                   FancyReveal();
+                  System.out.println("Player scored " + controlMain.getStatusSection().getActualTimer().getScore());
                   JOptionPane.showMessageDialog(null, "Game Over");
+                  controlMain.addEndPage();
                }
             else {
                revealCell(sourceCell.row, sourceCell.col);
@@ -223,7 +225,9 @@ public class GameBoardPanel extends JPanel {
             controlMain.getTimer().stop();
             controlMain.getStatusSection().getActualTimer().replaceLabel();
             System.out.println("User has obtained another victory");
+            System.out.println("Player scored " + controlMain.getStatusSection().getActualTimer().getScore());
             JOptionPane.showMessageDialog(null, "You've Won!");
+            controlMain.addEndPage();
          }
       }
    }
@@ -413,5 +417,25 @@ public class GameBoardPanel extends JPanel {
       revealActionListener = new RevealActionListener(style);
       revealTimer = new Timer(difficultyDelay, revealActionListener);
       revealTimer.start();
+   }
+
+   public int getDifficulty() {
+      return controlMain.getDifficulty();
+   }
+
+   private int mineFlagged = 0;
+   private void updateMineFlagged() {
+      int count = 0;
+      for (int row = 0; row < glob_row; ++row) {
+         for (int col = 0; col < glob_col; ++col) {
+            if (cells[row][col].isFlagged && cells[row][col].isMined)
+               ++count;
+         }
+      }
+      mineFlagged = count;
+   }
+
+   public int getMineFlagged() {
+      return mineFlagged;
    }
 }
