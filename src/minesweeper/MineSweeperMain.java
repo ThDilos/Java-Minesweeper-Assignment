@@ -20,6 +20,8 @@ public class MineSweeperMain extends JFrame {
    private StatusSection statusSection = new StatusSection(this); // The top panel
    private StartMenu startMenu = new StartMenu(this); // The Start Menu
    private SettingPage settingPage = new SettingPage(this);
+   private RankPage rankPage = new RankPage(this);
+   private EndPage endPage = new EndPage();
 
    private Container cp; // Moved the container to a bigger level for more access
 
@@ -37,6 +39,7 @@ public class MineSweeperMain extends JFrame {
          @Override
          public void actionPerformed(ActionEvent evt) {
             cp.removeAll();
+            endPage = new EndPage();
             board.newGame(); // Generate a new set of game on the Game Board
             statusSection.resetTimer();
             statusSection.getTimer().start(); // Start the timour :D
@@ -84,12 +87,67 @@ public class MineSweeperMain extends JFrame {
          }
       });
 
+      startMenu.getRankingButton().addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent evt) {
+            cp.removeAll();
+            cp.repaint();
+            rankUpdater();
+            cp.add(rankPage,BorderLayout.CENTER);
+            pack();
+            setLocationRelativeTo(null);
+
+            rankPage.getReturnButton().addActionListener(new ActionListener() {
+               @Override
+               public void actionPerformed(ActionEvent owoWhatsDis) {
+                  cp.removeAll();
+                  cp.repaint();
+                  cp.add(startMenu, BorderLayout.CENTER);
+                  pack();
+                  setLocationRelativeTo(null);
+               }
+            });
+
+            rankPage.getClearAllButton().addActionListener(new ActionListener() {
+               @Override
+               public void actionPerformed(ActionEvent uwu) {
+                  rankPage.getLeaderBoard().clearRankings();
+                  cp.removeAll();
+                  cp.repaint();
+                  rankUpdater();
+                  pack();
+                  setLocationRelativeTo(null);
+               }
+            });
+         }
+      });
+
       pack(); // Set size to the buttons in Start menu
      // Pack the UI components, instead of setSize()
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // handle window-close button
       setTitle("Minesweeper");
       setVisible(true);   // show it
       setLocationRelativeTo(null); // Start the JFrame at the center of screen
+   }
+
+   public void rankUpdater() {
+      cp.removeAll();
+      cp.repaint();
+      rankPage = new RankPage(this);
+      cp.add(rankPage,BorderLayout.CENTER);
+      pack();
+      setLocationRelativeTo(null);
+
+      rankPage.getReturnButton().addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent owoWhatsDis) {
+            cp.removeAll();
+            cp.repaint();
+            cp.add(startMenu, BorderLayout.CENTER);
+            pack();
+            setLocationRelativeTo(null);
+         }
+      });
    }
 
    /* Methods for enclosure purpose */
@@ -113,6 +171,60 @@ public class MineSweeperMain extends JFrame {
    public int getDifficulty() {
       return this.difficulty;
    }
+
+   public RankPage getRankPage() {
+      return this.rankPage;
+   }
+
+   // End Page Section
+   public void addEndPage() {
+      add(endPage, BorderLayout.SOUTH);
+      pack();
+      endPage.getAddToRank().addActionListener(buttonListener);
+   }
+
+   // Used when restart
+   public void removeEndPage() {
+      remove(endPage);
+      pack();
+      endPage = new EndPage();
+      repaint();
+   }
+
+      // The custom Button listener
+      private ButtonListener buttonListener = new ButtonListener();
+
+      private class ButtonListener implements ActionListener {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            switch (e.getActionCommand()) {
+               case "Add to Rank":
+                  endPage.infoInputSection();
+                  endPage.getSubmit().addActionListener(buttonListener);
+                  add(endPage, BorderLayout.SOUTH);
+                  pack();
+                  repaint();
+                  break;
+    
+               case "Submit":
+                  String output = rankPage.getLeaderBoard().addNewRecord(endPage.getNameInput(), statusSection.getActualTimer().getScore());
+                  if (output.equals("New record added")) {
+                     remove(endPage);
+                     endPage.removeAll();
+                     endPage.add(new JLabel("New record added"));                   
+                  }
+                  else {
+                     endPage.setNoteTitle(output);
+                  }
+                     add(endPage, BorderLayout.SOUTH);
+                     repaint();
+                     pack();
+                  break;
+               default:
+                  break;
+              }
+          }
+       };
 
    // The entry main() method
    public static void main(String[] args) {
