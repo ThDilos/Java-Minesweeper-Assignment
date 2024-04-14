@@ -45,4 +45,8 @@ public class StartMenu extends JPanel { // This is the start menu you see on ini
     public JButton getSettingButton() {
         return this.settings;
     }
+
+    public JButton getRankingButton() {
+        return this.rankings;
+    }
  }
