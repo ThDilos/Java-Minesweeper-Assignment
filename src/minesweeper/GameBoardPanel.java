@@ -13,6 +13,8 @@ public class GameBoardPanel extends JPanel {
 
    private MineSweeperMain controlMain;
 
+   private RevealActionListener revealActionListener;
+
    // Get a new MineMap
    private MineMap mineMap = new MineMap();
 
@@ -298,6 +300,13 @@ public class GameBoardPanel extends JPanel {
             default:
                break;
          }
+
+         // Revoke all listener
+         for (int row = 0; row < glob_row; row++) {
+            for (int col = 0; col < glob_col; col++) {
+               cells[row][col].removeMouseListener(listener);
+            }
+         }
       }
 
       // Reveal from Up to down, Single cell
@@ -382,7 +391,6 @@ public class GameBoardPanel extends JPanel {
          revealTimer.stop();
    }
 
-
    public void FancyReveal() {
       timerSetUp = true;
       int difficultyDelay, style;
@@ -397,12 +405,12 @@ public class GameBoardPanel extends JPanel {
             difficultyDelay = 2;
             break;
          default:
-            difficultyDelay = 25;
+            difficultyDelay = 20;
             break;
       } 
 
       style = Math.round((float)((3 + 0) * Math.random()));
-      RevealActionListener revealActionListener = new RevealActionListener(style);
+      revealActionListener = new RevealActionListener(style);
       revealTimer = new Timer(difficultyDelay, revealActionListener);
       revealTimer.start();
    }
