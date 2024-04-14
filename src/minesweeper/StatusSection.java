@@ -14,19 +14,21 @@ public class StatusSection extends JPanel { // This is the top section panel add
     
     public StatusSection(MineSweeperMain controlCenter) { //Constructor
         this.controlCenter = controlCenter;
-        super.setLayout(new GridLayout(1, 3, 50, 1)); //Set up the panel into gridlayout
+        super.setLayout(new GridLayout(1, 3, 25, 1)); //Set up the panel into gridlayout
         restart = new JButton("Restart"); //Initialise the Button with text "Restart"
 
         goBack = new JButton("Return");
 
         super.add(goBack);
-        super.add(restart); //Add start to the top panel
+
+        
 
         // To achieve the restart function
         restart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controlCenter.getBoard().newGame();
+                controlCenter.removeEndPage();
                 resetTimer();
                 System.out.println("Game restarted!"); // Output to log
             }
@@ -35,7 +37,9 @@ public class StatusSection extends JPanel { // This is the top section panel add
         LabelTimer = new JLabel("000"); //Initialise the Label
         ActualTimer  = new CustomTimerAction(this); //Initialise the ActualTimer, used to record down second, minute, hour
         timer = new Timer(1000, ActualTimer); // Initialise the timer, and add ActualTimer to the actionPerformed
+        LabelTimer.setHorizontalAlignment(SwingConstants.CENTER);
         super.add(LabelTimer); // Add the label onto the top panel
+        super.add(restart); //Add start to the top panel
     }
 
     public Timer getTimer() {
