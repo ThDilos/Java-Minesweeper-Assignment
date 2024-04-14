@@ -38,6 +38,7 @@ public class MineSweeperMain extends JFrame {
          public void actionPerformed(ActionEvent evt) {
             cp.removeAll();
             board.newGame(); // Generate a new set of game on the Game Board
+            statusSection.resetTimer();
             statusSection.getTimer().start(); // Start the timour :D
             cp.repaint();
 
