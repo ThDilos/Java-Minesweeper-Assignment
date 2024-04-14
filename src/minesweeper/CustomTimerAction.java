@@ -54,8 +54,53 @@ public class CustomTimerAction implements ActionListener {
 
     public void replaceLabel() {
         if (this.board.hasWon())
-            label.setText("Time Spent: " + this.toString());
+            label.setText("Score: " + String.format("%.2f", getScore()) + "/100 in " + this.toString());
         else if (this.board.hasLost())
-            label.setText("You've Lost!"); // Replace the timer with "You've Lost!"
+            label.setText("Score: " + String.format("%.2f", getScore()) + " You've Lost!"); // Replace the timer with "You've Lost!"
+    }
+
+    public float getScore() {
+        int timeTaken = second + minute * 60 + hour * 60;
+        int difficulty = board.getDifficulty();
+        int mineFlagged = board.getMineFlagged();
+
+        if (this.board.hasWon()) {
+            switch (difficulty) {
+
+                // Easy Difficulty
+                case 0:
+                    if(timeTaken < 15)
+                        return 100f;
+                    else if(timeTaken < 120)
+                        return (float)(-(4.0 / 441.0) * (timeTaken - 15) * (timeTaken - 15) + 100); // Powered by ChatGPT, this expression will result in an increasingly decreasing function when x > 15, and reaches 0 when x = 120
+                    else
+                        return 0.0f;
+            
+                //Normal Difficulty
+                case 1:
+                    if(timeTaken < 60)
+                        return 100f;
+                    else if(timeTaken < 180)
+                        return (float)(-(1.0 / 114.0) * (timeTaken - 60) * (timeTaken - 60) + 100); // Same thing. The formula can be calculated by solving y = a(x-60)^2 + b, but I don't bother :/
+                    else
+                        return 0.0f;
+
+                //Hard Difficulty
+                case 2:
+                    if(timeTaken < 180)
+                        return 100f;
+                    else if(timeTaken < 300)
+                        return (float)(-(1.0 / 144.0) * (timeTaken - 180) * (timeTaken - 180) + 100); // Ok, I did some math, a = 100 - (300 - 180)^2, b = 100 always
+                    else
+                        return 0.0f;
+
+                //Whatever this difficulty is
+                default:
+                    System.out.println("You chose a non-existing difficulty and there is no score can measure your greatness...");
+                    return -1.0f;
+            }
+        }
+        else // Award player the number of flagged mine if they lose
+            return (float)mineFlagged;
     }
  }
