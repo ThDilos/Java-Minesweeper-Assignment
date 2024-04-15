@@ -21,10 +21,10 @@ Due Date: Week 13
     12. Hints and cheats? 
     13. Theme?
     14. Use of images and icons?
-    15. Welcome screen? [Start Menu?] [DONE?]
-    16. Mouse-less interface?
+    15. Welcome screen? [Start Menu?] [DONE]
+    16. Mouse-less interface? [Why do we even need this] [Possible but a lot of work]
     17. Handling of first move: Most minesweepers ensure that your first move will not hit a mine? Some even ensure that the first move will always has 0 surrounding mines. [Done]
-    18. (Very difficult) Multi-Player network game. [Tempting...]
+    18. (Very difficult) Multi-Player network game. [I don't think we have enough time for this]
     ......
 
 * Update: 07 April 2024. The next few updates should be in branch V1.0.1
@@ -41,4 +41,4 @@ Extra Feature Realised:
 6. Different colors for the different numbers
 7. Auto put the window on your screen center on initialisation, also resize it to the standard size whenever you are in the start page 
 8. Spawn Protection of 3*3 blocks ;)
-9. Local Rankings CRUD. This took me a whole fucken day ffs
+9. Local Rankings CRUD. This took me a whole fucken day ffs. The ranking can record entries for all three difficulties
