@@ -12,20 +12,46 @@ public class LeaderBoard {
 
     // Private variables
     private String[] name; // This two arrays store respective data
-    private Float[] score;
+    private float[] score;
     private int index; // This index is the amount of inputs we have
     private File localRankings;
     
+    private int difficulty; // The difficulty, to be updated every time the user change difficulty
 
-    public LeaderBoard() {
+    // The 3 readers for different difficulties
+    private List<String> totalFile  = new ArrayList<>();
+    private List<String> easyList = new ArrayList<>();
+    private List<String> normalList = new ArrayList<>();
+
+    public LeaderBoard(int difficulty) {
         name = new String[rankReadLimit]; // Initialise the name array
-        score = new Float[rankReadLimit]; // Initialise the score array
+        score = new float[rankReadLimit]; // Initialise the score array
+
+        this.difficulty = difficulty;
+
+        // Initialise the 3 readers
+        totalFile  = new ArrayList<>();
+        easyList = new ArrayList<>();
+        normalList = new ArrayList<>(); 
+
         index = 0; // Initialise the index to 0
         localRankings = new File("localRankings.txt");
-        
-        System.out.println(localRankings.getAbsolutePath());
 
         readCurrentFile();
+        readingSequence();
+        rankFileRefreshing();
+    }
+
+    // Create a new file containing standard format String
+    private void createNewStandardFile() {
+        try {
+            localRankings.delete();
+            localRankings.createNewFile();
+            RandomAccessFile tempRAF = new RandomAccessFile(localRankings, "rw");
+            tempRAF.writeBytes("#\n#");
+            tempRAF.close();
+        }
+        catch(Exception e) {}
     }
 
     // Fresh the index, name and score String array after constructing and an operation
@@ -34,26 +60,62 @@ public class LeaderBoard {
         try {
             // Create the file if existsn't
             if (!localRankings.exists()) {
-                localRankings.createNewFile();
+                createNewStandardFile();
                 System.out.println("\"localRanking.txt\" not found in your local machine\nSo this file has been created");
             }
-            RandomAccessFile tempRAF = new RandomAccessFile(localRankings, "r"); // The temporary pointer to CRUD the localRankings.txt
-            if (tempRAF.length() > 0) {
-                // Read whatever data we have right now
-                while (tempRAF.getFilePointer() < tempRAF.length() && rankReadLimit > index) { // Loop until pointer is at last position
-                    
-                    String[] splittedStrings = tempRAF.readLine().split("!"); // Split name and score with "!". As in the file, a data string is in the format "name!score"
-                    name[index] = splittedStrings[0];
-                    score[index] = Float.parseFloat(splittedStrings[1]);
-                    System.out.println("Data set with index of " + index + " has been read. With name = " + name[index] + ", score = " + score[index]); // Debug output
-                    ++index;
-                }
-                System.out.println("A total amount of " + index + " set of data have being found");
+            readingSequence();
+            System.out.println("Difficulty is at " + difficulty + ". Reading ranks...");
+            switch (difficulty) {
+                // Easy Rank
+                case 0:
+                    if(easyList.isEmpty()) 
+                        System.out.println("No entry found in Easy Ranking.");
+                    else {
+                        while(!easyList.isEmpty()) {
+                            String[] splittedStrings = easyList.remove(0).split("!");
+                            name[index] = splittedStrings[0];
+                            score[index] = Float.parseFloat(splittedStrings[1]);
+                            ++index;
+                        }
+                        System.out.println("Easy rank updated, found " + index + " entries.");
+                    }
+                    break;
+
+                // Normal Rank
+                case 1:
+                    if(normalList.isEmpty())
+                        System.out.println("No entry found in Normal Ranking.");
+                    else {
+                        while(!normalList.isEmpty()) {
+                            String[] splittedStrings = normalList.remove(0).split("!");
+                            name[index] = splittedStrings[0];
+                            score[index] = Float.parseFloat(splittedStrings[1]);
+                            ++index;
+                        }
+                        System.out.println("Normal rank updated, found " + index + " entries.");
+                    }
+                    break;
+
+                // Hard Rank
+                case 2:
+                    if (totalFile.isEmpty())
+                        System.out.println("No entry found in Hard Ranking.");
+                    else {
+                        while(!totalFile.isEmpty()) {
+                            String[] splittedStrings = totalFile.remove(0).split("!");
+                            name[index] = splittedStrings[0];
+                            score[index] = Float.parseFloat(splittedStrings[1]);
+                            ++index;
+                        }
+                        System.out.println("Hard rank updated, find " + index + " entries.");
+                    }
+                    break;
+
+                // Non-existent rank
+                default:
+                    System.err.println("Unknown Difficulty number");
+                    break;
             }
-            else {
-                System.out.println("There is no data exist yet");
-            }
-            tempRAF.close(); // Close da pointer
         }
         catch(Exception wtf) {
             System.out.println(wtf); // Output wtf has just happened, as per required by the java.io.File and java.io.RandomAccessFile 
@@ -78,7 +140,7 @@ public class LeaderBoard {
     public String addNewRecord(String name, float score) {
         try {
             if (!localRankings.exists()) {
-                localRankings.createNewFile();
+                createNewStandardFile();
                 System.out.println("\"localRanking.txt\" not found in your local machine\nDo not delete this stuff! >:(\nSo a new file has been created");
             }
 
@@ -87,36 +149,73 @@ public class LeaderBoard {
                 return inputValidation(name);
             }
             else {
-                RandomAccessFile tempRAF = new RandomAccessFile(localRankings, "rw"); // The temporary pointer to CRUD the localRankings.txt
-                if(tempRAF.length() == 0) {
-                    tempRAF.writeBytes(name + "!" + score);
-                }
-                else {
-                    int tempIndex = 0;
-                    // Move cursor to the correct position
-                    while(tempIndex < this.index) {
-                        if(this.score[tempIndex] > score) 
-                            tempRAF.readLine();
+                readingSequence();
+                switch (difficulty) {
+                    case 0:
+                        if (!easyList.isEmpty())
+                            for (String str : easyList) {
+                                Float listScore = Float.parseFloat(str.split("!")[1]);
+                                int listIndex = easyList.indexOf(str);
+                                if (score >= listScore){
+                                    easyList.add(listIndex, name + "!" + score);
+                                    break;
+                                }
+                                if (listIndex + 1 == easyList.size() && score < listScore) {
+                                    easyList.add(name + "!" + score);
+                                    break;
+                                }
+                            }
                         else
-                            break;
-                        System.out.println(score + " is lesser than " + this.score[tempIndex]);
-                        ++tempIndex; 
-                    }
-                    if (tempIndex == this.index) {
-                        System.out.println("Appendition performed");
-                        tempRAF.writeBytes("\n" + name + "!" + score);
-                    }
-                    else {
-                        long insertPosition = tempRAF.getFilePointer();
-                        String theRest = getTheRestRecords(tempRAF);
-                        System.out.println("Insertion Performed");
-                        tempRAF.seek(insertPosition);
-                        tempRAF.writeBytes(name + "!" + score + theRest); // Write new record
-                    }
+                            easyList.add(name + "!" + score);
+                        System.out.println("A new record of [name:" + name + ";score:" + score + "] has been added into Easy Rank");
+
+                        break;
+
+                    case 1:
+                        if (!normalList.isEmpty())
+                            for (String str : normalList) {
+                                Float listScore = Float.parseFloat(str.split("!")[1]);
+                                int listIndex = normalList.indexOf(str);
+                                if (score >= listScore){
+                                    normalList.add(listIndex, name + "!" + score);
+                                    break;
+                                }
+                                if (listIndex + 1 == normalList.size() && score < listScore) {
+                                    normalList.add(name + "!" + score);
+                                    break;
+                                }
+                            }
+                        else
+                            normalList.add(name + "!" + score);
+                        System.out.println("A new record of [name:" + name + ";score:" + score + "] has been added into Normal Rank");
+
+                        break;
+
+                    case 2:
+                        if (!totalFile.isEmpty())
+                            for (String str : totalFile) {
+                                Float listScore = Float.parseFloat(str.split("!")[1]);
+                                int listIndex = totalFile.indexOf(str);
+                                if (score >= listScore){
+                                    totalFile.add(listIndex, name + "!" + score);
+                                    break;
+                                }
+                                if (listIndex + 1 == totalFile.size() && score < listScore) {
+                                    totalFile.add(name + "!" + score);
+                                    break;
+                                }
+                            }
+                        else
+                            totalFile.add(name + "!" + score);
+                        System.out.println("A new record of [name:" + name + ";score:" + score + "] has been added into Hard Rank");
+
+                        break;
+
+                    default:
+                        break;
                 }
-                tempRAF.close(); // Close da pointer
-                System.out.println("A new record of [name:" + name + ";score:" + score + "] has been added");
-                readCurrentFile();
+
+                rankFileRefreshing();
                 return "New record added";
             }
         }
@@ -132,25 +231,23 @@ public class LeaderBoard {
             if (index > this.index - 1)
                 return "Index exceeding current record counts.";
             else {
-                RandomAccessFile tempRAF = new RandomAccessFile(localRankings, "rw");
-                List<String> lines = new ArrayList<>();
-                String line;
+                readingSequence();
 
-                while((line = tempRAF.readLine()) != null) {
-                    lines.add(line);
+                switch (difficulty) {
+                    case 0:
+                        System.out.println(easyList.remove(index) + " has being removed from Easy Rank");
+                        break;
+                    case 1:
+                        System.out.println(normalList.remove(index) + " has being removed from Normal Rank");
+                        break;
+                    case 2:
+                        System.out.println(totalFile.remove(index) + " has being removed from Hard rank");
+                        break;
+                    default:
+                        break;
                 }
-                lines.remove(index);
-                tempRAF.close();
 
-                localRankings.delete();
-                localRankings.createNewFile();
-                tempRAF = new RandomAccessFile(localRankings, "rw");
-                for (int i = 0; i < lines.size(); ++i) {
-                    tempRAF.writeBytes(lines.get(i));
-                    if (i < lines.size() - 1) 
-                        tempRAF.writeBytes("\n");
-                }
-                tempRAF.close();
+                rankFileRefreshing(); // Generate a new set of ranking based on the 3 readers
                 readCurrentFile();
                 return "Deletion completed";
             }
@@ -161,44 +258,92 @@ public class LeaderBoard {
         }
     }
 
-    // Clear all the rankings
+    // Clear all the rankings for this difficulty
     public void clearRankings() {
+        try {
+            switch (difficulty) {
+                case 0:
+                    easyList.clear();
+                    break;
+                case 1:
+                    normalList.clear();
+                    break;
+                case 2:
+                    totalFile.clear();
+                    break;
+                default:
+                    break;
+            }
+        rankFileRefreshing();
+        readCurrentFile();
+        } catch (Exception e) {}
+    }
+
+    // Update the current rank from file
+    private void readingSequence() {
+        try {
+            RandomAccessFile tempRAF = new RandomAccessFile(localRankings, "rw"); // The temporary pointer to CRUD the localRankings.txt
+
+            easyList.clear();
+            normalList.clear();
+            totalFile.clear();
+
+            // Read whatever data we have right now
+            while (tempRAF.getFilePointer() < tempRAF.length() && rankReadLimit > index)// Loop until all file is read
+                totalFile.add(tempRAF.readLine());
+
+            tempRAF.close();
+
+            while(totalFile.indexOf("#") != 0) // Copy the data in totalFile that belongs to easy mode to easy
+                easyList.add(totalFile.remove(0));
+            totalFile.remove(0); // Remove the first #
+
+            while(totalFile.indexOf("#") != 0) // Copy the data in totalFile that belongs to normal mode to normal
+                normalList.add(totalFile.remove(0));
+            totalFile.remove(0); // Then the rest of totalFile is hardList
+        }
+        catch(Exception e) {}
+    }
+
+    // Generate a new set of ranking based on the 3 readers
+    private void rankFileRefreshing() {
         try {
             localRankings.delete();
             localRankings.createNewFile();
             RandomAccessFile tempRAF = new RandomAccessFile(localRankings, "rw");
+            for (int i = 0; i < easyList.size(); ++i) {
+                tempRAF.writeBytes(easyList.get(i) + "\n");
+            }
+            tempRAF.writeBytes("#\n");
+
+            for (int i = 0; i < normalList.size(); ++i) {
+                tempRAF.writeBytes(normalList.get(i) + "\n");
+            }
+            if(totalFile.isEmpty())
+                tempRAF.writeBytes("#");
+            else
+                tempRAF.writeBytes("#\n");
+
+            for (int i = 0; i < totalFile.size(); ++i) {
+                tempRAF.writeBytes(totalFile.get(i));
+                if (i < totalFile.size() - 1) 
+                    tempRAF.writeBytes("\n");
+            }
             tempRAF.close();
-        }
-        catch(Exception e) {
-            System.out.println(e);
-        }
-        readCurrentFile();
+            readingSequence();
+        } catch (Exception e) {}
     }
 
     // Validate user name input
     private String inputValidation(String name) {
         if (name.length() < 1)
             return "You didn't enter your name!";
-        else if (name.contains("!"))
-            return "Your name must not contain \"!\"";
+        else if (name.contains("!") || name.contains("#"))
+            return "Your name must not contain \"!\" or \"#\"";
         else if (name.length() > nameCharLimit)
             return "You can only have at most " + nameCharLimit + " characters in your name!";
         else
             return "True";
-    }
-
-    // Return a String containing all the records after, to connect with the new insert one
-    private String getTheRestRecords(RandomAccessFile tempRAF) { // RandomAccessFile has no insert function :(
-        String everythingElse = "";
-        try {
-            while(tempRAF.getFilePointer() < tempRAF.length()) {
-                everythingElse += "\n" + tempRAF.readLine();
-            }
-        }
-        catch(Exception e) {
-            return "what can possibily go wrong?";
-        }
-        return everythingElse;
     }
 
     // toString for all inputs
