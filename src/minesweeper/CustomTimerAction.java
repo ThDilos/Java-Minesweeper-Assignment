@@ -120,7 +120,7 @@ public class CustomTimerAction implements ActionListener {
                     difficultyModifier = 180;
                     break;
             }
-            return (float)mineFlagged / (float)difficultyModifier;
+            return (float)mineFlagged / (float)difficultyModifier * 50;
         }
     }
  }
