@@ -13,7 +13,6 @@ import javax.swing.*;     // Use Swing's Containers and Components
  */
 public class MineSweeperMain extends JFrame {
    private static final long serialVersionUID = 1L;  // to prevent serial warning
-
    // private variables
    private GameBoardPanel board = new GameBoardPanel(this);
 
@@ -175,6 +174,7 @@ public class MineSweeperMain extends JFrame {
    public RankPage getRankPage() {
       return this.rankPage;
    }
+
 
    // End Page Section
    public void addEndPage() {
