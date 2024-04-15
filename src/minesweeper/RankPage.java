@@ -15,19 +15,30 @@ public class RankPage extends JPanel{
         this.controlMain = controlMain; // Link up to the main container
         super.setLayout(new BorderLayout());
 
-        localRankings = new LeaderBoard();
+        localRankings = new LeaderBoard(controlMain.getDifficulty());
         super.add(topList(), BorderLayout.NORTH);
         super.add(content(), BorderLayout.CENTER);
         super.add(bottomSection(), BorderLayout.SOUTH);
     }
 
     public JPanel topList() { // The Top Labels
+        Font upperLabelFont = new Font("Monospaced", Font.BOLD, 20);
+
+        JLabel[] upperLabels = new JLabel[4];
+        upperLabels[0] = new JLabel("Index");
+        upperLabels[1] = new JLabel("Name");
+        upperLabels[2] = new JLabel("Score");
+        upperLabels[3] = new JLabel("Deletion");
+
         JPanel temp = new JPanel();
-        temp.setLayout(new GridLayout(1, 4, 0, 1));
-        temp.add(new JLabel("Index", JLabel.CENTER));
-        temp.add(new JLabel("Name", JLabel.CENTER));
-        temp.add(new JLabel("Score", JLabel.CENTER));
-        temp.add(new JLabel("Deletion", JLabel.CENTER));
+        temp.setLayout(new GridLayout(1, 4, 1, 1));
+
+        for(JLabel butt : upperLabels) {
+            butt.setHorizontalAlignment(SwingConstants.CENTER);
+            butt.setFont(upperLabelFont);
+            temp.add(butt);
+        }
+        temp.setBackground(Color.YELLOW);
         return temp;
     }
 
@@ -46,7 +57,7 @@ public class RankPage extends JPanel{
 
     private JPanel content() { // The middle contents with all the rankings
         JPanel temp = new JPanel();
-        temp.setLayout(new GridLayout(10, 4, 0, 1));
+        temp.setLayout(new GridLayout(10, 4, 0, 5));
         indexes = new JLabel[10];
         names = new JLabel[10];
         scores = new JLabel[10];
@@ -63,7 +74,7 @@ public class RankPage extends JPanel{
             temp.add(indexes[i]);
             temp.add(names[i]);
             temp.add(scores[i]);
-
+            
             if(!localRankings.getPair(i)[1].equals("-")) {
                 deletions[i] = new JButton("DEL " + Integer.toString(i));
                 deletions[i].addActionListener(new ActionListener() {
@@ -74,10 +85,14 @@ public class RankPage extends JPanel{
                         controlMain.rankUpdater();
                     }
                 });
+                deletions[i].setHorizontalAlignment(SwingConstants.CENTER);
                 temp.add(deletions[i]);
             }
-            else
-                temp.add(new JLabel("-"));
+            else {
+                JLabel nothingHere = new JLabel("-");
+                nothingHere.setHorizontalAlignment(SwingConstants.CENTER);
+                temp.add(nothingHere);
+            }
         }
         return temp;
     }
