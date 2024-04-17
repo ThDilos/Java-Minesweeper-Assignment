@@ -54,9 +54,9 @@ public class CustomTimerAction implements ActionListener {
 
     public void replaceLabel() {
         if (this.board.hasWon())
-            label.setText("Score: " + String.format("%.2f", getScore()) + "/100 in " + this.toString());
+            label.setText("Score: " + String.format("%.2f", getScore()) + "/100");
         else if (this.board.hasLost())
-            label.setText("Score: " + String.format("%.2f", getScore()) + " You've Lost!"); // Replace the timer with "You've Lost!"
+            label.setText("Score: " + String.format("%.2f", getScore())); // Replace the timer with "You've Lost!"
     }
 
     public float getScore() {
