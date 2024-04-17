@@ -242,6 +242,7 @@ public class GameBoardPanel extends JPanel {
             } catch (IOException | FontFormatException p) {
             p.printStackTrace();
             }
+                controlMain.addEndPage();
                }
             else {
                 SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\leftclick.wav",0f); // Play mine hit sound effect
