@@ -76,6 +76,7 @@ public class CustomTimerAction implements ActionListener {
                         finalScore =  (float)(-(2.0 / 441.0) * (timeTaken - 15) * (timeTaken - 15) + 100); // Powered by ChatGPT, this expression will result in an increasingly decreasing function when x > 15, and reaches 50 when x = 120
                     else
                         finalScore =  50.0f;
+                    break;
             
                 //Normal Difficulty
                 case 1:
@@ -85,6 +86,7 @@ public class CustomTimerAction implements ActionListener {
                         finalScore =  (float)(-(1.0 / 288.0) * (timeTaken - 60) * (timeTaken - 60) + 100); // Same thing. The formula can be calculated by solving y = a(x-60)^2 + b, but I don't bother :/
                     else
                         finalScore =  50.0f;
+                    break;
 
                 //Hard Difficulty
                 case 2:
@@ -94,11 +96,13 @@ public class CustomTimerAction implements ActionListener {
                         finalScore =  (float)(-(1.0 / 288.0) * (timeTaken - 180) * (timeTaken - 180) + 100); // Ok, I did some math, a = 100 / (300 - 180)^2, b = 100 always
                     else
                         finalScore =  50.0f;
+                        break;
 
                 //Whatever this difficulty is
                 default:
                     System.out.println("You chose a non-existing difficulty and there is no score can measure your greatness...");
                     finalScore =  -1.0f;
+                    break;
             }
             // If the player goals a score that is lower than their mineFlagged, score = mineFlagged
             return finalScore;
