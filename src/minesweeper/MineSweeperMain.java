@@ -41,8 +41,8 @@ public class MineSweeperMain extends JFrame {
       cp.setLayout(new BorderLayout()); // in 10x10 GridLayout
       cp.add(startMenu, BorderLayout.CENTER); // Open Start Menu on initialisation
 
-    // Play initial background music at startup
-    SoundManager.playBackgroundMusic("sprites/sounds/bootbeat.wav", true,-10);
+      // Play initial background music at startup
+      SoundManager.playBackgroundMusic("sprites/sounds/bootbeat.wav", true,-10);
 
 
       startMenu.getStartButton().addActionListener(new ActionListener() { // When you pressed "Start":
@@ -65,20 +65,21 @@ public class MineSweeperMain extends JFrame {
             statusSection.getGoBackButton().addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent evt) {
-                SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav", 6.0f);
-                SoundManager.playBackgroundMusic("sprites/sounds/bootbeat.wav", true,-10);
+                  SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav", 6.0f);
+                  SoundManager.playBackgroundMusic("sprites/sounds/bootbeat.wav", true,-10);
                   cp.removeAll();
                   cp.repaint();
                   cp.add(startMenu, BorderLayout.CENTER);
                   setPreferredSize(new Dimension(854, 480));
                   pack();
                   setLocationRelativeTo(null);
+                  statusSection.getGoBackButton().removeActionListener(this);
                }
             });
          }
       });
 
-      
+         
       startMenu.getSettingButton().addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent evt) {
@@ -93,12 +94,13 @@ public class MineSweeperMain extends JFrame {
             settingPage.getReturnButton().addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent owoWhatsDis) {
-                SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav",6.0f);
+                  SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav",6.0f);
                   cp.removeAll();
                   cp.repaint();
                   cp.add(startMenu, BorderLayout.CENTER);
                   pack();
                   setLocationRelativeTo(null);
+                  settingPage.getReturnButton().removeActionListener(this);
                }
             });
          }
@@ -124,6 +126,8 @@ public class MineSweeperMain extends JFrame {
                   cp.add(startMenu, BorderLayout.CENTER);
                   pack();
                   setLocationRelativeTo(null);
+                  rankPage.getReturnButton().removeActionListener(this);
+                  rankPage.getClearAllButton().removeActionListener(this);
                }
             });
 
@@ -137,13 +141,16 @@ public class MineSweeperMain extends JFrame {
                   rankUpdater();
                   pack();
                   setLocationRelativeTo(null);
+                  rankPage.getClearAllButton().setEnabled(false);
+                  rankPage.getClearAllButton().setBackground(Color.GRAY);
+                  rankPage.getClearAllButton().removeActionListener(this);
                }
             });
          }
       });
 
       pack(); // Set size to the buttons in Start menu
-     // Pack the UI components, instead of setSize()
+      // Pack the UI components, instead of setSize()
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // handle window-close button
       setTitle("Minesweeper");
       setVisible(true);   // show it
@@ -213,40 +220,40 @@ public class MineSweeperMain extends JFrame {
       repaint();
    }
 
-      // The custom Button listener
-      private ButtonListener buttonListener = new ButtonListener();
+   // The custom Button listener
+   private ButtonListener buttonListener = new ButtonListener();
 
-      private class ButtonListener implements ActionListener {
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            switch (e.getActionCommand()) {
-               case "Add to Rank":
-                  endPage.infoInputSection();
-                  endPage.getSubmit().addActionListener(buttonListener);
-                  add(endPage, BorderLayout.SOUTH);
-                  pack();
-                  repaint();
-                  break;
-    
-               case "Submit":
-                  String output = rankPage.getLeaderBoard().addNewRecord(endPage.getNameInput(), statusSection.getActualTimer().getScore());
-                  if (output.equals("New record added")) {
-                     remove(endPage);
-                     endPage.removeAll();
-                     endPage.add(new JLabel("New record added"));                   
-                  }
-                  else {
-                     endPage.setNoteTitle(output);
-                  }
-                     add(endPage, BorderLayout.SOUTH);
-                     repaint();
-                     pack();
-                  break;
-               default:
-                  break;
-              }
-          }
-       };
+   private class ButtonListener implements ActionListener {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         switch (e.getActionCommand()) {
+            case "Add to Rank":
+               endPage.infoInputSection();
+               endPage.getSubmit().addActionListener(buttonListener);
+               add(endPage, BorderLayout.SOUTH);
+               pack();
+               repaint();
+               break;
+   
+            case "Submit":
+               String output = rankPage.getLeaderBoard().addNewRecord(endPage.getNameInput(), statusSection.getActualTimer().getScore());
+               if (output.equals("New record added")) {
+                  remove(endPage);
+                  endPage.removeAll();
+                  endPage.add(new JLabel("New record added"));                   
+               }
+               else {
+                  endPage.setNoteTitle(output);
+               }
+               add(endPage, BorderLayout.SOUTH);
+               repaint();
+               pack();
+               break;
+            default:
+               break;
+            }
+         }
+      };
 
    // The entry main() method
    public static void main(String[] args) {
