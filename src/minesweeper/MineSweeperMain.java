@@ -118,7 +118,7 @@ public class MineSweeperMain extends JFrame {
             rankPage.getReturnButton().addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent owoWhatsDis) {
-                SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav",6.0f);
+               SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav",6.0f);
                   cp.removeAll();
                   cp.repaint();
                   cp.add(startMenu, BorderLayout.CENTER);
@@ -130,7 +130,7 @@ public class MineSweeperMain extends JFrame {
             rankPage.getClearAllButton().addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent uwu) {
-                SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav", 6.0f);
+               SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav", 6.0f);
                   rankPage.getLeaderBoard().clearRankings();
                   cp.removeAll();
                   cp.repaint();
@@ -255,16 +255,16 @@ public class MineSweeperMain extends JFrame {
          public void run() {
             try {
                // Set cross-platform Java L&F (also called "Metal")
-           UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-           } catch (UnsupportedLookAndFeelException e) {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+            } catch (UnsupportedLookAndFeelException e) {
               // handle exception
-           } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
               // handle exception
-           } catch (InstantiationException e) {
+            } catch (InstantiationException e) {
               // handle exception
-           } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
               // handle exception
-           }
+            }
 
             try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("sprites/fonts/PixelifySans-VariableFont_wght.ttf")).deriveFont(30f);

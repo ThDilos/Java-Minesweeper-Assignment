@@ -1,19 +1,13 @@
 package minesweeper;
 
 import javax.swing.*;
-
-
 import java.awt.*;
 
 public class StartMenu extends JPanel { // This is the start menu you see on initialisation
     private JButton start, settings, rankings;
     private JLabel bigTitle;
     private Dimension ButtonDimension = new Dimension(200, 30);
-    private ImageIcon titleIcon = new ImageIcon("sprites/images/Minesweeper.jpg");
-
-
-
-    
+    private ImageIcon titleIcon = new ImageIcon("sprites/images/title.png");
 
     public StartMenu(MineSweeperMain controlMain) {
         super.setBackground(Color.LIGHT_GRAY);
