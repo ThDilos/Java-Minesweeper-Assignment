@@ -61,6 +61,7 @@ public class SettingPage extends JPanel {
         @Override 
         public void actionPerformed(ActionEvent lmai) {
             String sourceString = lmai.getActionCommand();
+            SoundManager.playSoundEffect("sprites/sounds/clickbeat.wav", 6.0f);
             switch (sourceString) {
                 case "Easy":
                     controlMain.setDifficulty(0);
