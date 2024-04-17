@@ -63,7 +63,7 @@ public class LeaderBoard {
                 createNewStandardFile();
                 System.out.println("\"localRanking.txt\" not found in your local machine\nSo this file has been created");
             }
-            readingSequence();
+            rankFileRefreshing();
             System.out.println("Difficulty is at " + difficulty + ". Reading ranks...");
             switch (difficulty) {
                 // Easy Rank
@@ -128,12 +128,6 @@ public class LeaderBoard {
             return new String[] {name[index],Float.toString(score[index]),Integer.toString(index)};
         else
             return new String[] {"-","-","-"};
-    }
-
-    // Get index
-    public int getIndex() {
-        readCurrentFile();
-        return index;
     }
 
     // Adding new record, insert in order of descending scores
@@ -274,7 +268,6 @@ public class LeaderBoard {
                 default:
                     break;
             }
-        rankFileRefreshing();
         readCurrentFile();
         } catch (Exception e) {}
     }
