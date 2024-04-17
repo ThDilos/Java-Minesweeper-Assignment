@@ -211,10 +211,10 @@ public class GameBoardPanel extends JPanel {
                   System.out.println("Player scored " + controlMain.getStatusSection().getActualTimer().getScore());
                   
                   for (int row = 0; row < glob_row; row++) {
-                    for (int col = 0; col < glob_col; col++) {
+                     for (int col = 0; col < glob_col; col++) {
                         cells[row][col].setBackground(Color.RED); //gives red animtion after the mine is pressed 
-                    }
-                }
+                     }
+                  }
                  // JOptionPane.showMessageDialog(null, "Game Over");
                   //controlMain.addEndPage();
 
