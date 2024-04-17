@@ -23,8 +23,6 @@ public class StatusSection extends JPanel { // This is the top section panel add
 
         super.add(goBack);
 
-        
-
         // To achieve the restart function
         restart.addActionListener(new ActionListener() {
             @Override
@@ -41,7 +39,7 @@ public class StatusSection extends JPanel { // This is the top section panel add
         ActualTimer  = new CustomTimerAction(this); //Initialise the ActualTimer, used to record down second, minute, hour
         timer = new Timer(1000, ActualTimer); // Initialise the timer, and add ActualTimer to the actionPerformed
         LabelTimer.setHorizontalAlignment(SwingConstants.CENTER);
-        LabelTimer.setFont(UIManager.getFont("Label.font"));
+        LabelTimer.setFont(UIManager.getFont("Label.font").deriveFont(20.0f));
         super.add(LabelTimer); // Add the label onto the top panel
         super.add(restart); //Add start to the top panel
     }
