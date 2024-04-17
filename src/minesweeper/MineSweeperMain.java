@@ -2,6 +2,8 @@ package minesweeper;
 
 import java.awt.*;        // Use AWT's Layout Manager
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;     // Use Swing's Containers and Components
 /**
@@ -27,16 +29,27 @@ public class MineSweeperMain extends JFrame {
    private int difficulty; // This is changed by SettingPage
    // Easy = 0, Normal = 1, Hard = 2
 
+   
    // Constructor to set up all the UI and game components
+   
+   
+   
    public MineSweeperMain() {
       this.difficulty = 0;
-      cp = this.getContentPane();           // JFrame's content-pane
+      cp = this.getContentPane();
+      cp.setBackground(new Color(45, 45, 45));            // JFrame's content-pane
       cp.setLayout(new BorderLayout()); // in 10x10 GridLayout
       cp.add(startMenu, BorderLayout.CENTER); // Open Start Menu on initialisation
+
+    // Play initial background music at startup
+    SoundManager.playBackgroundMusic("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\bootbeat.wav", true,-10);
+
 
       startMenu.getStartButton().addActionListener(new ActionListener() { // When you pressed "Start":
          @Override
          public void actionPerformed(ActionEvent evt) {
+            SoundManager.stopBackgroundMusic(); 
+            SoundManager.playBackgroundMusic("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\newgamebeat.wav", true,3);
             cp.removeAll();
             endPage = new EndPage();
             board.newGame(); // Generate a new set of game on the Game Board
@@ -52,6 +65,8 @@ public class MineSweeperMain extends JFrame {
             statusSection.getGoBackButton().addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent evt) {
+                SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\clickbeat.wav", 6.0f);
+                SoundManager.playBackgroundMusic("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\bootbeat.wav", true,-10);
                   cp.removeAll();
                   cp.repaint();
                   cp.add(startMenu, BorderLayout.CENTER);
@@ -63,9 +78,11 @@ public class MineSweeperMain extends JFrame {
          }
       });
 
+      
       startMenu.getSettingButton().addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent evt) {
+            SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\clickbeat.wav",6.0f);
             cp.removeAll();
             cp.repaint();
             cp.add(settingPage, BorderLayout.CENTER);
@@ -76,6 +93,7 @@ public class MineSweeperMain extends JFrame {
             settingPage.getReturnButton().addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent owoWhatsDis) {
+                SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\clickbeat.wav",6.0f);
                   cp.removeAll();
                   cp.repaint();
                   cp.add(startMenu, BorderLayout.CENTER);
@@ -89,6 +107,7 @@ public class MineSweeperMain extends JFrame {
       startMenu.getRankingButton().addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent evt) {
+            SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\clickbeat.wav",6.0f);
             cp.removeAll();
             cp.repaint();
             rankUpdater();
@@ -99,6 +118,7 @@ public class MineSweeperMain extends JFrame {
             rankPage.getReturnButton().addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent owoWhatsDis) {
+                SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\clickbeat.wav",6.0f);
                   cp.removeAll();
                   cp.repaint();
                   cp.add(startMenu, BorderLayout.CENTER);
@@ -110,6 +130,7 @@ public class MineSweeperMain extends JFrame {
             rankPage.getClearAllButton().addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent uwu) {
+                SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\clickbeat.wav", 6.0f);
                   rankPage.getLeaderBoard().clearRankings();
                   cp.removeAll();
                   cp.repaint();
@@ -128,6 +149,7 @@ public class MineSweeperMain extends JFrame {
       setVisible(true);   // show it
       setLocationRelativeTo(null); // Start the JFrame at the center of screen
    }
+   
 
    public void rankUpdater() {
       cp.removeAll();
@@ -231,6 +253,35 @@ public class MineSweeperMain extends JFrame {
       javax.swing.SwingUtilities.invokeLater(new Runnable() { // Whatever this is, it is good to have for some particular reason that I completely forgot
          @Override
          public void run() {
+            try {
+               // Set cross-platform Java L&F (also called "Metal")
+           UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+           } catch (UnsupportedLookAndFeelException e) {
+              // handle exception
+           } catch (ClassNotFoundException e) {
+              // handle exception
+           } catch (InstantiationException e) {
+              // handle exception
+           } catch (IllegalAccessException e) {
+              // handle exception
+           }
+
+            try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\PixelifySans-VariableFont_wght.ttf")).deriveFont(30f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            Font customFont2 = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\PixelifySans-VariableFont_wght.ttf")).deriveFont(50f);
+            ge.registerFont(customFont2);
+            UIManager.put("Button.font", customFont);
+            UIManager.put("Heading.font", customFont2);
+            UIManager.put("Label.font",customFont);
+            UIManager.put("Menu.font", customFont);
+            UIManager.put("MenuItem.font", customFont);
+            
+            } catch (IOException|FontFormatException e) {
+                e.printStackTrace();
+            }
+
             new MineSweeperMain(); // The core
          }
       });

@@ -10,9 +10,10 @@ public class EndPage extends JPanel {
     private JButton submit; // And the submit button on the right
 
     // Once you clicked submit, if successed, this whole section is replaced with a single label saying "New record added", else, error message replacing note
-
+    
     // The getter army
     public JButton getAddToRank() {
+        addToRank.setFont(UIManager.getFont("Button.font"));
         return addToRank;
     }
 
@@ -46,12 +47,14 @@ public class EndPage extends JPanel {
         removeAll(); // Remove the previous button
         setLayout(new FlowLayout());
         note = new JLabel("Enter your user name: ");
+        note.setFont(UIManager.getFont("Label.font"));
         add(note);
 
         userName = new JTextField(15);
         add(userName);
 
         submit = new JButton("Submit");
+        submit.setFont(UIManager.getFont("Button.font"));
         add(submit);
     }
 }

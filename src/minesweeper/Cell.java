@@ -1,6 +1,11 @@
 package minesweeper;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+
+import javax.swing.ImageIcon;
+
+
 import javax.swing.JButton;
 /**
  * The Cell class model the cells of the MineSweeper, by customizing (subclass)
@@ -11,13 +16,13 @@ public class Cell extends JButton {
 
    // Define named constants for JButton's colors and fonts
    //  to be chosen based on cell's state
-   public static final Color BG_NOT_REVEALED = Color.GREEN;
+   private ImageIcon flagIcon = new ImageIcon("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\mflag.png");
+   private ImageIcon mineIcon = new ImageIcon("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\mmine.png");
+   public static final Color BG_NOT_REVEALED =  new Color(70, 70, 70);;
    public static final Color FG_NOT_REVEALED = Color.RED;    // flag, mines
-   public static final Color BG_REVEALED = Color.DARK_GRAY;
+   public static final Color BG_REVEALED = new Color(160, 160, 160); 
    public static final Color FG_REVEALED = Color.YELLOW; // number of mines
    public static final Font FONT_NUMBERS = new Font("Monospaced", Font.BOLD, 20);
-
-   public static final Color FG_FLAGGED = Color.YELLOW;
 
    // Define properties (package-visible)
    /** The row and column number of the cell */
@@ -38,6 +43,24 @@ public class Cell extends JButton {
       super.setFont(FONT_NUMBERS);
    }
 
+   protected void paintComponent(Graphics g) {
+    super.paintComponent(g); // Always call super.paintComponent to handle default painting
+
+    // Now handle custom icon painting based on cell state
+    if (isFlagged && !isRevealed) {
+        setIcon(flagIcon);
+        setText("");
+    } else if (isMined && isRevealed) {
+        setIcon(mineIcon);
+        setText("");
+    } else {
+        setIcon(null);
+        setBackground(isRevealed ? BG_REVEALED : BG_NOT_REVEALED);
+        // You would add here code to display numbers, which can be drawn using g.drawString()
+        // or by using setText(), depending on your design.
+    }
+}
+    
    /** Reset this cell, ready for a new game */
    public void newGame(boolean isMined) {
       this.isRevealed = false; // default
@@ -45,16 +68,8 @@ public class Cell extends JButton {
       this.isMined = isMined;  // given
       super.setEnabled(true);  // enable button
       super.setText("");       // display blank
-      paint();
-   }
-
-   /** Paint itself based on its status */
-   public void paint() {
-      super.setBackground(isRevealed? BG_REVEALED: BG_NOT_REVEALED);
-      if (!isRevealed) {
-         super.setBackground(isFlagged? Color.yellow: BG_NOT_REVEALED);
-      } //Flag
-      if(isMined && isRevealed)
-         super.setBackground(Color.RED);
    }
 }
+
+   /** Paint itself based on its status */
+ 

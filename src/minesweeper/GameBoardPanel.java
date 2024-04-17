@@ -1,6 +1,9 @@
 package minesweeper;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.*;
 
 public class GameBoardPanel extends JPanel {
@@ -77,7 +80,7 @@ public class GameBoardPanel extends JPanel {
          for (int col = 0; col < glob_col; ++col) {
             cells[row][col] = new Cell(row, col);
             super.add(cells[row][col]);
-            cells[row][col].paint();
+            cells[row][col].repaint();
          }
       }
       
@@ -94,6 +97,7 @@ public class GameBoardPanel extends JPanel {
       }
    }
 
+   
    public class spawnProtection implements ActionListener {
       private int firstRow, firstCol;
 
@@ -197,23 +201,57 @@ public class GameBoardPanel extends JPanel {
             // if you hit a mine, game over
             // else reveal this cell
             if (sourceCell.isMined) 
-               {
+               { SoundManager.stopBackgroundMusic(); 
+                SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\explosion-01.wav",3);
                   revealSingleCell(sourceCell);
                   controlMain.getTimer().stop();
                   controlMain.getStatusSection().getActualTimer().replaceLabel();
                   System.out.println("User has taken an L");
                   FancyReveal();
                   System.out.println("Player scored " + controlMain.getStatusSection().getActualTimer().getScore());
-                  JOptionPane.showMessageDialog(null, "Game Over");
-                  controlMain.addEndPage();
+                  
+                  for (int row = 0; row < glob_row; row++) {
+                    for (int col = 0; col < glob_col; col++) {
+                        cells[row][col].setBackground(Color.RED); //gives red animtion after the mine is pressed 
+                    }
+                }
+                 // JOptionPane.showMessageDialog(null, "Game Over");
+                  //controlMain.addEndPage();
+
+                  try {
+                // Load and register the custom font
+               Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\PixelifySans-VariableFont_wght.ttf")).deriveFont(30f);
+               GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+               ge.registerFont(customFont);
+    
+               // Customize UIManager properties
+               UIManager.put("OptionPane.messageFont", customFont);
+               UIManager.put("OptionPane.buttonFont", customFont);
+               UIManager.put("OptionPane.background", Color.WHITE);
+               UIManager.put("Panel.background", Color.WHITE);
+               UIManager.put("OptionPane.messageForeground", Color.BLACK);
+
+               JLabel messageLabel = new JLabel("Game Over", SwingConstants.CENTER);
+               messageLabel.setFont(customFont);
+               messageLabel.setForeground(Color.BLACK);
+           
+               // Display the JOptionPane with the custom label
+               JOptionPane.showMessageDialog(null, messageLabel, "Game Over", JOptionPane.ERROR_MESSAGE);
+           
+    
+            } catch (IOException | FontFormatException p) {
+            p.printStackTrace();
+            }
                }
             else {
+                SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\leftclick.wav",0f); // Play mine hit sound effect
                revealCell(sourceCell.row, sourceCell.col);
             }
          } 
          else if (e.getButton() == MouseEvent.BUTTON3) { // right-button clicked
             sourceCell.isFlagged = !sourceCell.isFlagged;
-            sourceCell.paint();
+            sourceCell.repaint();
+            SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\flag.wav",0f);
          }
 
          if(hasWon()) {
@@ -235,7 +273,8 @@ public class GameBoardPanel extends JPanel {
    // The basic single cell reveal
    public void revealSingleCell(Cell sourceCell) {
       numMines = getSurroundingMines(sourceCell.row, sourceCell.col);
-      sourceCell.setText(sourceCell.isMined ? "*" : ((numMines == 0 ? "" : numMines)) + "");
+      sourceCell.setText(sourceCell.isMined ? " " : ((numMines == 0 ? "" : numMines)) + "");
+      sourceCell.setFont(new Font("Calamity", Font.BOLD, 18)); 
       if (!sourceCell.isMined)
          switch (numMines) {
             case 1:
@@ -264,10 +303,10 @@ public class GameBoardPanel extends JPanel {
             default:
                break;
          }
-      else
-         sourceCell.setForeground(Color.YELLOW);
+      else{}
+      sourceCell.setForeground(Color.BLACK);
       sourceCell.isRevealed = true;
-      sourceCell.paint();  // based on isRevealed
+      sourceCell.repaint();  // based on isRevealed
       sourceCell.removeMouseListener(listener);
    }
 

@@ -16,8 +16,10 @@ public class StatusSection extends JPanel { // This is the top section panel add
         this.controlCenter = controlCenter;
         super.setLayout(new GridLayout(1, 3, 25, 1)); //Set up the panel into gridlayout
         restart = new JButton("Restart"); //Initialise the Button with text "Restart"
+        restart.setFont(UIManager.getFont("Button.font"));
 
         goBack = new JButton("Return");
+        goBack.setFont(UIManager.getFont("Button.font"));
 
         super.add(goBack);
 
@@ -27,6 +29,7 @@ public class StatusSection extends JPanel { // This is the top section panel add
         restart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                SoundManager.playBackgroundMusic("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\newgamebeat.wav", true,3);
                 controlCenter.getBoard().newGame();
                 controlCenter.removeEndPage();
                 resetTimer();
@@ -38,6 +41,7 @@ public class StatusSection extends JPanel { // This is the top section panel add
         ActualTimer  = new CustomTimerAction(this); //Initialise the ActualTimer, used to record down second, minute, hour
         timer = new Timer(1000, ActualTimer); // Initialise the timer, and add ActualTimer to the actionPerformed
         LabelTimer.setHorizontalAlignment(SwingConstants.CENTER);
+        LabelTimer.setFont(UIManager.getFont("Label.font"));
         super.add(LabelTimer); // Add the label onto the top panel
         super.add(restart); //Add start to the top panel
     }

@@ -6,6 +6,7 @@ import java.awt.event.*;
 
 public class SettingPage extends JPanel {
     private JButton easy, normal, hard, goBack;
+    private JLabel difficulty_title ;
     private MineSweeperMain controlMain;
     private ActionListener lis = new DifficultyActionListener();
 
@@ -20,28 +21,37 @@ public class SettingPage extends JPanel {
         gbc.ipady = 10; // This changes the upper lower padding of individual components
         gbc.anchor = GridBagConstraints.CENTER; // This serves no purpose, but good to have maybe
         gbc.insets = new Insets(10,0,0,0); // The first int changes the distance between two components, dk about others havn't tried
-        super.add(new JLabel("Choose your difficulty"), gbc);
+        
+        difficulty_title  = new JLabel("Choose Difficulty");
+        difficulty_title .setHorizontalAlignment(SwingConstants.CENTER);
+       // bigTitle.setFont(new Font("Monospaced", Font.BOLD, 50));
+       difficulty_title .setFont(UIManager.getFont("Label.font"));
+        super.add(difficulty_title , gbc);
 
         gbc.gridy = 1;
 
         gbc.gridx = 0;
         easy = new JButton("Easy");
         easy.addActionListener(lis);
+        easy.setFont(UIManager.getFont("Button.font"));
         super.add(easy, gbc);
 
         normal = new JButton("Normal");
         normal.addActionListener(lis);
         gbc.gridx = 1;
+        normal.setFont(UIManager.getFont("Button.font"));
         super.add(normal, gbc);
 
         hard = new JButton("Hard");
         hard.addActionListener(lis);
         gbc.gridx = 2;
+        hard.setFont(UIManager.getFont("Button.font"));
         super.add(hard, gbc);
 
         goBack = new JButton("Return");
         gbc.gridx = 1;
         gbc.gridy = 3;
+        goBack.setFont(UIManager.getFont("Button.font"));
         super.add(goBack, gbc);
 
         super.setPreferredSize(new Dimension(854, 480));
