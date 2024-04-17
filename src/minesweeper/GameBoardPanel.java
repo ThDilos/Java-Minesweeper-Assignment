@@ -202,7 +202,7 @@ public class GameBoardPanel extends JPanel {
             // else reveal this cell
             if (sourceCell.isMined) 
                { SoundManager.stopBackgroundMusic(); 
-                SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\explosion-01.wav",3);
+                SoundManager.playSoundEffect("sprites/sounds/explosion-01.wav",3);
                   revealSingleCell(sourceCell);
                   controlMain.getTimer().stop();
                   controlMain.getStatusSection().getActualTimer().replaceLabel();
@@ -220,7 +220,7 @@ public class GameBoardPanel extends JPanel {
 
                   try {
                 // Load and register the custom font
-               Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\PixelifySans-VariableFont_wght.ttf")).deriveFont(30f);
+               Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("sprites/fonts/PixelifySans-VariableFont_wght.ttf")).deriveFont(30f);
                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
                ge.registerFont(customFont);
     
@@ -245,14 +245,14 @@ public class GameBoardPanel extends JPanel {
                 controlMain.addEndPage();
                }
             else {
-                SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\leftclick.wav",0f); // Play mine hit sound effect
+                SoundManager.playSoundEffect("sprites/sounds/leftclick.wav",0f); // Play mine hit sound effect
                revealCell(sourceCell.row, sourceCell.col);
             }
          } 
          else if (e.getButton() == MouseEvent.BUTTON3) { // right-button clicked
             sourceCell.isFlagged = !sourceCell.isFlagged;
             sourceCell.repaint();
-            SoundManager.playSoundEffect("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\flag.wav",0f);
+            SoundManager.playSoundEffect("sprites/sounds/flag.wav",0f);
          }
 
          if(hasWon()) {

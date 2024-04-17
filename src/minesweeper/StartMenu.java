@@ -9,7 +9,7 @@ public class StartMenu extends JPanel { // This is the start menu you see on ini
     private JButton start, settings, rankings;
     private JLabel bigTitle;
     private Dimension ButtonDimension = new Dimension(200, 30);
-    private ImageIcon titleIcon = new ImageIcon("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\Minesweeper.jpg");
+    private ImageIcon titleIcon = new ImageIcon("sprites/images/Minesweeper.jpg");
 
 
 

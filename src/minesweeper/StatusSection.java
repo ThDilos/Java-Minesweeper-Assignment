@@ -29,7 +29,7 @@ public class StatusSection extends JPanel { // This is the top section panel add
         restart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SoundManager.playBackgroundMusic("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\newgamebeat.wav", true,3);
+                SoundManager.playBackgroundMusic("sprites/sounds/newgamebeat.wav", true,3);
                 controlCenter.getBoard().newGame();
                 controlCenter.removeEndPage();
                 resetTimer();

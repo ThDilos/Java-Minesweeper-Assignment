@@ -16,8 +16,8 @@ public class Cell extends JButton {
 
    // Define named constants for JButton's colors and fonts
    //  to be chosen based on cell's state
-   private ImageIcon flagIcon = new ImageIcon("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\mflag.png");
-   private ImageIcon mineIcon = new ImageIcon("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\mmine.png");
+   private ImageIcon flagIcon = new ImageIcon("sprites/images/mflag.png");
+   private ImageIcon mineIcon = new ImageIcon("sprites/images/mmine.png");
    public static final Color BG_NOT_REVEALED =  new Color(10, 10, 10);;
    public static final Color FG_NOT_REVEALED = Color.RED;    // flag, mines
    public static final Color BG_REVEALED = new Color(160, 160, 160); 

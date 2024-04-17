@@ -47,7 +47,7 @@ public class EndPage extends JPanel {
         removeAll(); // Remove the previous button
         setLayout(new FlowLayout());
         note = new JLabel("Enter your user name: ");
-        note.setFont(UIManager.getFont("Label.font"));
+        note.setFont(UIManager.getFont("Label.font").deriveFont(20.0f));
         add(note);
 
         userName = new JTextField(15);
