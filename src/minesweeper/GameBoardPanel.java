@@ -201,8 +201,9 @@ public class GameBoardPanel extends JPanel {
             // if you hit a mine, game over
             // else reveal this cell
             if (sourceCell.isMined) 
-               { SoundManager.stopBackgroundMusic(); 
-                SoundManager.playSoundEffect("sprites/sounds/explosion-01.wav",3);
+               {
+                  SoundManager.stopBackgroundMusic(); 
+                  SoundManager.playSoundEffect("sprites/sounds/explosion-01.wav",3);
                   revealSingleCell(sourceCell);
                   controlMain.getTimer().stop();
                   controlMain.getStatusSection().getActualTimer().replaceLabel();
@@ -261,6 +262,8 @@ public class GameBoardPanel extends JPanel {
                   cells[row][col].removeMouseListener(listener);
                }
             }
+            SoundManager.stopBackgroundMusic(); 
+            SoundManager.playSoundEffect("sprites/sounds/winbeat.wav",3);
             controlMain.getTimer().stop();
             controlMain.getStatusSection().getActualTimer().replaceLabel();
             System.out.println("User has obtained another victory");
