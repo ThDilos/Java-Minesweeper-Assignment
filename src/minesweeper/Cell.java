@@ -18,9 +18,10 @@ public class Cell extends JButton {
    //  to be chosen based on cell's state
    private ImageIcon flagIcon = new ImageIcon("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\mflag.png");
    private ImageIcon mineIcon = new ImageIcon("C:\\Users\\kaust\\OneDrive\\Documents\\IM1003\\MineSweeper\\src\\minesweeper\\fonts\\mmine.png");
-   public static final Color BG_NOT_REVEALED =  new Color(70, 70, 70);;
+   public static final Color BG_NOT_REVEALED =  new Color(10, 10, 10);;
    public static final Color FG_NOT_REVEALED = Color.RED;    // flag, mines
    public static final Color BG_REVEALED = new Color(160, 160, 160); 
+   public static final Color BG_REVEALEDNUMBERS = new Color(70, 70, 70); 
    public static final Color FG_REVEALED = Color.YELLOW; // number of mines
    public static final Font FONT_NUMBERS = new Font("Monospaced", Font.BOLD, 20);
 
@@ -46,19 +47,25 @@ public class Cell extends JButton {
    protected void paintComponent(Graphics g) {
     super.paintComponent(g); // Always call super.paintComponent to handle default painting
 
-    // Now handle custom icon painting based on cell state
     if (isFlagged && !isRevealed) {
-        setIcon(flagIcon);
-        setText("");
-    } else if (isMined && isRevealed) {
-        setIcon(mineIcon);
-        setText("");
-    } else {
-        setIcon(null);
-        setBackground(isRevealed ? BG_REVEALED : BG_NOT_REVEALED);
-        // You would add here code to display numbers, which can be drawn using g.drawString()
-        // or by using setText(), depending on your design.
-    }
+      setIcon(flagIcon);
+      setText("");
+  } else if (isMined && isRevealed) {
+      setIcon(mineIcon);
+      setText("");
+  } else if (isRevealed) {  // Cell is revealed
+      setIcon(null);  // No icon for a number
+      // Check if the cell is supposed to display a number (i.e., it is not a mine and it is adjacent to mines)
+      if (!getText().equals("") && !getText().equals(" ")) {
+          setBackground(BG_REVEALEDNUMBERS);  // Set the specific background for cells with numbers
+      } else {
+          setBackground(BG_REVEALED);  // Set the default background for revealed cells without numbers
+      }
+  } else {
+      setIcon(null);
+      setText("");
+      setBackground(BG_NOT_REVEALED);  // Default background for unrevealed cells
+  }
 }
     
    /** Reset this cell, ready for a new game */
