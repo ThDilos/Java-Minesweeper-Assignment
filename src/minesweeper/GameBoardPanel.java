@@ -298,7 +298,6 @@ public class GameBoardPanel extends JPanel {
                break;
          }
       else{}
-      sourceCell.setForeground(Color.BLACK);
       sourceCell.isRevealed = true;
       sourceCell.repaint();  // based on isRevealed
       sourceCell.removeMouseListener(listener);
