@@ -45,6 +45,7 @@ public class GameBoardPanel extends JPanel {
             this.glob_col = minesweeper.MineSweeperConstants.EASY_COLS;
             this.numMines = minesweeper.MineSweeperConstants.EASY_MINE_NUM;
             this.cell_size = minesweeper.MineSweeperConstants.EASY_CELL_SIZE;
+            System.out.println("Initialised Easy Difficulty");
             break;
          case 1:
             this.glob_row = minesweeper.MineSweeperConstants.NORMAL_ROWS;
@@ -58,6 +59,7 @@ public class GameBoardPanel extends JPanel {
             this.glob_col = minesweeper.MineSweeperConstants.HARD_COLS;
             this.numMines = minesweeper.MineSweeperConstants.HARD_MINE_NUM;
             this.cell_size = minesweeper.MineSweeperConstants.HARD_CELL_SIZE;
+            System.out.println("Initialised Hard Difficulty");
             break;
          default:
             this.glob_row = 10;
@@ -103,6 +105,7 @@ public class GameBoardPanel extends JPanel {
 
       @Override
       public void actionPerformed(ActionEvent e) {
+         SoundManager.playSoundEffect("sprites/sounds/leftclick.wav",0f); // Play mine hit sound effect
          Cell sourcCell = (Cell) e.getSource();
          this.firstRow = sourcCell.row;
          this.firstCol = sourcCell.col;
@@ -220,33 +223,33 @@ public class GameBoardPanel extends JPanel {
                   //controlMain.addEndPage();
 
                   try {
-                // Load and register the custom font
-               Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("sprites/fonts/PixelifySans-VariableFont_wght.ttf")).deriveFont(30f);
-               GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-               ge.registerFont(customFont);
-    
-               // Customize UIManager properties
-               UIManager.put("OptionPane.messageFont", customFont);
-               UIManager.put("OptionPane.buttonFont", customFont);
-               UIManager.put("OptionPane.background", Color.WHITE);
-               UIManager.put("Panel.background", Color.WHITE);
-               UIManager.put("OptionPane.messageForeground", Color.BLACK);
+                     // Load and register the custom font
+                     Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("sprites/fonts/PixelifySans-VariableFont_wght.ttf")).deriveFont(30f);
+                     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                     ge.registerFont(customFont);
+         
+                     // Customize UIManager properties
+                     UIManager.put("OptionPane.messageFont", customFont);
+                     UIManager.put("OptionPane.buttonFont", customFont);
+                     UIManager.put("OptionPane.background", Color.WHITE);
+                     UIManager.put("Panel.background", Color.WHITE);
+                     UIManager.put("OptionPane.messageForeground", Color.BLACK);
 
-               JLabel messageLabel = new JLabel("Game Over", SwingConstants.CENTER);
-               messageLabel.setFont(customFont);
-               messageLabel.setForeground(Color.BLACK);
-           
-               // Display the JOptionPane with the custom label
-               JOptionPane.showMessageDialog(null, messageLabel, "Game Over", JOptionPane.ERROR_MESSAGE);
+                     JLabel messageLabel = new JLabel("Game Over", SwingConstants.CENTER);
+                     messageLabel.setFont(customFont);
+                     messageLabel.setForeground(Color.BLACK);
+               
+                     // Display the JOptionPane with the custom label
+                     JOptionPane.showMessageDialog(null, messageLabel, "Game Over", JOptionPane.ERROR_MESSAGE);
            
     
-            } catch (IOException | FontFormatException p) {
-            p.printStackTrace();
-            }
-                controlMain.addEndPage();
+                  } catch (IOException | FontFormatException p) {
+                     p.printStackTrace();
+                  }
+                  controlMain.addEndPage();
                }
             else {
-                SoundManager.playSoundEffect("sprites/sounds/leftclick.wav",0f); // Play mine hit sound effect
+               SoundManager.playSoundEffect("sprites/sounds/leftclick.wav",0f); // Play mine hit sound effect
                revealCell(sourceCell.row, sourceCell.col);
             }
          } 

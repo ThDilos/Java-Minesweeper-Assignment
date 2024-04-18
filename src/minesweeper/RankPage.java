@@ -19,11 +19,12 @@ public class RankPage extends JPanel{
         super.add(topList(), BorderLayout.NORTH);
         super.add(content(), BorderLayout.CENTER);
         super.add(bottomSection(), BorderLayout.SOUTH);
+
+        goBack.setFont(UIManager.getFont("Button.font"));
+        clearRanks.setFont(UIManager.getFont("Button.font"));
     }
 
     public JPanel topList() { // The Top Labels
-        Font upperLabelFont = new Font("Monospaced", Font.BOLD, 20);
-
         JLabel[] upperLabels = new JLabel[4];
         upperLabels[0] = new JLabel("Index");
         upperLabels[1] = new JLabel("Name");
@@ -35,7 +36,7 @@ public class RankPage extends JPanel{
 
         for(JLabel butt : upperLabels) {
             butt.setHorizontalAlignment(SwingConstants.CENTER);
-            butt.setFont(upperLabelFont);
+            butt.setFont(UIManager.getFont("Button.font"));
             temp.add(butt);
         }
         temp.setBackground(Color.YELLOW);
@@ -66,10 +67,13 @@ public class RankPage extends JPanel{
         for(int i = 0; i < 10; ++i) {
             indexes[i] = new JLabel(Integer.toString(i+1));
             indexes[i].setHorizontalAlignment(SwingConstants.CENTER);
+            indexes[i].setFont(UIManager.getFont("Button.font"));
             names[i] = new JLabel(localRankings.getPair(i)[0]);
             names[i].setHorizontalAlignment(SwingConstants.CENTER);
+            names[i].setFont(UIManager.getFont("Button.font"));
             scores[i] = new JLabel(localRankings.getPair(i)[1]);
             scores[i].setHorizontalAlignment(SwingConstants.CENTER);
+            scores[i].setFont(UIManager.getFont("Button.font"));
 
             temp.add(indexes[i]);
             temp.add(names[i]);
@@ -86,10 +90,12 @@ public class RankPage extends JPanel{
                     }
                 });
                 deletions[i].setHorizontalAlignment(SwingConstants.CENTER);
+                deletions[i].setFont(UIManager.getFont("Button.font"));
                 temp.add(deletions[i]);
             }
             else {
                 JLabel nothingHere = new JLabel("-");
+                nothingHere.setFont(UIManager.getFont("Button.font"));
                 nothingHere.setHorizontalAlignment(SwingConstants.CENTER);
                 temp.add(nothingHere);
             }

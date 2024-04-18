@@ -193,6 +193,7 @@ public class MineSweeperMain extends JFrame {
 
    public void setDifficulty(int val) {
       this.difficulty = val;
+      getRankPage().getLeaderBoard().updateDifficulty(val);
       System.out.println("Difficulty has been set to \"" + val + "\"");
    }
 
@@ -240,7 +241,9 @@ public class MineSweeperMain extends JFrame {
                if (output.equals("New record added")) {
                   remove(endPage);
                   endPage.removeAll();
-                  endPage.add(new JLabel("New record added"));                   
+                  JLabel successMsg = new JLabel("New record added");
+                  successMsg.setFont(UIManager.getFont("Button.font"));
+                  endPage.add(successMsg);
                }
                else {
                   endPage.setNoteTitle(output);
@@ -286,7 +289,7 @@ public class MineSweeperMain extends JFrame {
             UIManager.put("MenuItem.font", customFont);
             
             } catch (IOException|FontFormatException e) {
-                e.printStackTrace();
+               e.printStackTrace();
             }
 
             new MineSweeperMain(); // The core

@@ -41,7 +41,6 @@ public class StartMenu extends JPanel { // This is the start menu you see on ini
         start.setFocusPainted(false);
         super.add(start, gbc);
         
-        
         settings = new JButton("Settings");
         settings.setPreferredSize(new Dimension(200, 30));
         //settings.setFont(new Font("Arial", Font.PLAIN, (int)ButtonDimension.getHeight() - 2));
@@ -59,9 +58,7 @@ public class StartMenu extends JPanel { // This is the start menu you see on ini
         rankings.setFont(UIManager.getFont("Button.font"));
         super.add(rankings, gbc);
 
-
         controlMain.setPreferredSize(new Dimension(854, 480)); // This is the size of Minecraft :3
-     
     }
     
        

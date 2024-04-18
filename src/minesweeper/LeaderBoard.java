@@ -340,6 +340,11 @@ public class LeaderBoard {
             return "True";
     }
 
+    // Update Difficulty
+    public void updateDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
+
     // toString for all inputs
     public String toString() {
         String temp = "[    Index    Name    Score   ]";
