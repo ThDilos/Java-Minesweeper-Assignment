@@ -12,7 +12,7 @@ Due Date: Week 13
     3. Beautify your graphical interface, e.g., theme (color, font), layout, etc. [To be done at last?]
     4. Choice of difficulty levels (e.g,, easy, intermediate, difficult with different board sizes). [DONE]
     5. Create a menu bar for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes). [I don't suggest this, this makes the game look old and ugly :(]
-    6. Create a status bar (JTextField at the south zone of BorderLayout) to show the messages (e.g., the number of mines remaining). (Google "java swing statusbar"). [Isn't this cheating?]
+    6. Create a status bar (JTextField at the south zone of BorderLayout) to show the messages (e.g., the number of mines remaining). (Google "java swing statusbar").
     7. Timer (pause/resume), score, progress bar. [Timer DONE]
     8. A side panel for command, display, strategy? 
     9. Choice of game board - there are many variations of game board!
@@ -24,7 +24,7 @@ Due Date: Week 13
     15. Welcome screen? [Start Menu?] [DONE]
     16. Mouse-less interface? [Why do we even need this] [Possible but a lot of work]
     17. Handling of first move: Most minesweepers ensure that your first move will not hit a mine? Some even ensure that the first move will always has 0 surrounding mines. [Done]
-    18. (Very difficult) Multi-Player network game. [I don't think we have enough time for this]
+    18. (Very difficult) Multi-Player network game. [I don't think we have enough time for this] [ I Tried to do a simple cloud ranking, managed to get MySQL Database & tables and PHPMyAdmin setup and working in my vps, but the java side seems more complicated, and the users must also have a JDBC driver? nah not worth it ]
     ......
 
 * Update: 07 April 2024. The next few updates should be in branch V1.0.1
