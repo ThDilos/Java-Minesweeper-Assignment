@@ -182,7 +182,7 @@ public class LeaderBoard {
                         else
                             normalList.add(name + "!" + score);
                         System.out.println("A new record of [name:" + name + ";score:" + score + "] has been added into Normal Rank");
-
+                        
                         break;
 
                     case 2:

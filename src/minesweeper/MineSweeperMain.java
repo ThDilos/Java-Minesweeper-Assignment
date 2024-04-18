@@ -291,7 +291,6 @@ public class MineSweeperMain extends JFrame {
             } catch (IOException|FontFormatException e) {
                e.printStackTrace();
             }
-
             new MineSweeperMain(); // The core
          }
       });

@@ -21,7 +21,6 @@ public class CustomTimerAction implements ActionListener {
           minute = 0;
           hour++;
        }
-       
        label.setText(this.toSecond()); // Set the timer label per second
     }
 
@@ -67,7 +66,6 @@ public class CustomTimerAction implements ActionListener {
 
         if (this.board.hasWon()) {
             switch (difficulty) {
-
                 // Easy Difficulty
                 case 0:
                     if(timeTaken < 15)
@@ -127,4 +125,4 @@ public class CustomTimerAction implements ActionListener {
             return (float)mineFlagged / (float)difficultyModifier * 50;
         }
     }
- }
+}

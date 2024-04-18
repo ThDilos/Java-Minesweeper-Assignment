@@ -1,36 +1,28 @@
 package minesweeper;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-
 import javax.swing.*;
 
 public class GameBoardPanel extends JPanel {
-   private int cell_size, glob_row, glob_col, canvas_height, canvas_width, numMines;
-
    private static final long serialVersionUID = 1L;  // to prevent serial warning
 
+   private int cell_size, glob_row, glob_col, canvas_height, canvas_width, numMines;
    private CellMouseListener listener = new CellMouseListener(); // TODO 3: a generic listener for all
    private spawnProtection firstClick = new spawnProtection(); // Spawn Protection so you won't die immediately
-
    private MineSweeperMain controlMain;
-
    private RevealActionListener revealActionListener;
-
    // Get a new MineMap
    private MineMap mineMap = new MineMap();
-
    // Define properties (package-visible)
    /** The game board composes of glob_rowxglob_col cells */
    Cell cells[][];
-   /** Number of mines */
    /** Constructor */
    public GameBoardPanel(MineSweeperMain controlMain) {
       this.controlMain = controlMain;
-
       super.setLayout(new GridLayout(10, 10, 2, 2));  // JPanel
-
       // Set the size of the content-pane and pack all the components
       //  under this container.
       super.setPreferredSize(new Dimension(canvas_width, canvas_height));
@@ -76,7 +68,6 @@ public class GameBoardPanel extends JPanel {
       controlMain.setPreferredSize(new Dimension(canvas_width, canvas_height));
       controlMain.repaint();
       repaint();
-
       // Allocate the 2D array of Cell, and added into content-pane and this common listener
       for (int row = 0; row < glob_row; ++row) {
          for (int col = 0; col < glob_col; ++col) {
@@ -85,13 +76,10 @@ public class GameBoardPanel extends JPanel {
             cells[row][col].repaint();
          }
       }
-      
       super.setLayout(new GridLayout(glob_row, glob_col, 2, 2));  // JPanel
-
       // Set the size of the content-pane and pack all the components
       //  under this container.
       super.setPreferredSize(new Dimension(canvas_width, canvas_height));
-
       for (int row = 0; row < glob_row; row++) {
          for (int col = 0; col < glob_col; col++) {
             cells[row][col].addActionListener(firstClick);
@@ -125,7 +113,6 @@ public class GameBoardPanel extends JPanel {
                cells[row][col].isRevealed = false;
             }
          }
-
          revealCell(sourcCell.row, sourcCell.col);
       }
    }
@@ -219,7 +206,7 @@ public class GameBoardPanel extends JPanel {
                         cells[row][col].setBackground(Color.RED); //gives red animtion after the mine is pressed 
                      }
                   }
-                 // JOptionPane.showMessageDialog(null, "Game Over");
+                  // JOptionPane.showMessageDialog(null, "Game Over");
                   //controlMain.addEndPage();
 
                   try {
@@ -429,7 +416,6 @@ public class GameBoardPanel extends JPanel {
          }
          sourceTimer.stop();
       }
-
    }
 
    // Cool Reveal Pattern Division

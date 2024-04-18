@@ -8,7 +8,6 @@ public class EndPage extends JPanel {
     private JTextField userName; // If you clicked, you are brought to a new window (Override the previous button) // Within you can see this textfield that you can input your user name
     private JLabel note; // The label on the left telling you what's going on
     private JButton submit; // And the submit button on the right
-
     // Once you clicked submit, if successed, this whole section is replaced with a single label saying "New record added", else, error message replacing note
     
     // The getter army

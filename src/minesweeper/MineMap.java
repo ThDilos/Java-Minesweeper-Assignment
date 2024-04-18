@@ -7,9 +7,7 @@ public class MineMap {
    // package access
    int numMines;
    boolean[][] isMined;
-
-   
-         // default is false
+   // default is false
 
    // Constructor
    public MineMap() {
