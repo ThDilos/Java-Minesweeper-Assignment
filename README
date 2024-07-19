@@ -5,6 +5,8 @@ Due Date: Week 13
 
 Note: The Base Game Source Code with some basic functions are from Professor Chua directly, explanation and source code can be found [here](https://www3.ntu.edu.sg/home/ehchua/programming/java/JavaGame_MineSweeper.html)
 
+---
+
 * Update: 06 April 2024. Base game is complete. Now we focus on the "More Credits" Part:
 
     1. If a cell with no surrounding mine is revealed, all the 8-neighbors shall be automatically revealed, in a "recursive" manner. Also, there is no need to display the number "0". [DONE]
